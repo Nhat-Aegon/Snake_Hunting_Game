@@ -19,7 +19,7 @@ int SPEED;// Standing for level, the higher the level, the quicker the speed
 int HEIGH_CONSOLE, WIDTH_CONSOLE;// Width and height of console-screen
 int FOOD_INDEX; // current food-index
 int SIZE_SNAKE; // size of snake, initially maybe 6 units and maximum size maybe 32)
-int STATE; // State of snake: dead or alive
+int STATE; // State of snake: dead or alive 
 
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
    HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
@@ -341,4 +341,5 @@ void main()
 			}
 		}
 	}
-}
+} \\aloalo 1 2 3 4 dong chi tlinh len do\\
+	
