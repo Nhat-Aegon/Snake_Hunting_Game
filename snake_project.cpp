@@ -341,5 +341,5 @@ void main()
 			}
 		}
 	}
-} \\aloalo 1 2 3 4 dong chi tlinh len do\\
+} 
 	
