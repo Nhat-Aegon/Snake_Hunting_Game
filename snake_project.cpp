@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS 1 //asd
 #include <iostream>
 #include<Windows.h> //Mot header cua Windows, chua cac ham trong windows api
 #include<thread>
