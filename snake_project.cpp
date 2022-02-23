@@ -262,34 +262,6 @@ void StartGame() {
 	
     STATE = 1;//Start running Thread    
 }
-
-//int main()
-//{
-//    FixConsoleWindow();
-//    StartGame();
-//	thread t1(ThreadFunc); //Create thread for snake
-//		HANDLE handle_t1 = t1.native_handle(); //Take handle of thread
-//		while (true) {
-//			int temp = 0;
-//			if (_kbhit())
-//			{
-//				temp = _getch();
-//				if (temp >= 'a' && temp <= 'z')
-//					temp -= 32;
-//			}
-//			if (STATE == 1) {
-//				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp =='W' || temp == 'S'))
-//				{
-//					if (temp == 'D') CHAR_LOCK = 'A';
-//					else if (temp == 'W') CHAR_LOCK = 'S';
-//					else if (temp == 'S') CHAR_LOCK = 'W';
-//					else CHAR_LOCK = 'D';
-//					MOVING = temp;
-//				}
-//			}
-//			else break;
-//		}
-//}
 void ExitGame(HANDLE t) {
 	system("cls");
 	TerminateThread(t, 0);
@@ -297,6 +269,100 @@ void ExitGame(HANDLE t) {
 //Function pause game
 void PauseGame(HANDLE t) {
 	SuspendThread(t);
+}
+void setColor(int color) // ham doi mau chu
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void showCurPointer(bool CursorVisibility) // ham hien/an con tro
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO ConCurInf;
+
+	ConCurInf.dwSize = 10;
+	ConCurInf.bVisible = CursorVisibility;
+
+	SetConsoleCursorInfo(handle, &ConCurInf);
+}
+void main_menu() //xay dung menu
+{
+	int Set[] = { 7,7,7,7,7 }; // DEFAULT COLORS
+	int counter = 1;
+	char key;
+
+	while(true)
+	{
+		GotoXY(50, 5);
+		setColor(Set[0]);
+		cout << "NEW GAME";
+
+		GotoXY(50, 6);
+		setColor(Set[1]);
+		cout << "HIGHEST SCORE";
+
+		GotoXY(50, 7);
+		setColor(Set[2]);
+		cout << "CONTACT";
+
+		GotoXY(50, 8);
+		setColor(Set[3]);
+		cout << "LAST GAME";
+
+		key = _getch();
+
+		if ((key == 'W' || key == 'w') && (counter >= 2 && counter <= 4))
+		{
+			counter--;
+		}
+		if ((key == 'S' || key == 's') && (counter >= 1 && counter <= 3))
+		{
+			counter++;
+		}
+		if (key == '\r')
+		{
+			switch (counter)
+			{
+			case 1:
+			{
+				newGame();
+				return;
+				break;
+			}
+			break;
+			}
+		}
+
+		Set[0] = 7;
+		Set[1] = 7;
+		Set[2] = 7;
+		Set[3] = 7;
+		Set[4] = 7;
+
+		if (counter == 1)
+		{
+			Set[0] = 12;
+		}
+		if (counter == 2)
+		{
+			Set[1] = 12;
+		}
+		if (counter == 3)
+		{
+			Set[2] = 12;
+		}
+		if (counter == 4)
+		{
+			Set[3] = 12;
+		}
+		if (counter == 5)
+		{
+			Set[4] = 12;
+		}
+
+
+	}
+	
 }
 void main()
 {
