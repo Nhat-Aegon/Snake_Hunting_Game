@@ -275,7 +275,7 @@ void setColor(int color) // ham doi mau chu
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-void showCurPointer(bool CursorVisibility) // ham hien/an con tro
+void showCur(bool CursorVisibility) // ham hien/an con tro
 {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConCurInf;
@@ -333,31 +333,14 @@ void main_menu() //xay dung menu
 			}
 		}
 
-		Set[0] = 7;
-		Set[1] = 7;
-		Set[2] = 7;
-		Set[3] = 7;
-		Set[4] = 7;
+		for (int i = 0; i < 4; i++)
+		{
+			Set[i] = 7;
+		}
 
-		if (counter == 1)
+		if (counter != 0)
 		{
-			Set[0] = 12;
-		}
-		if (counter == 2)
-		{
-			Set[1] = 12;
-		}
-		if (counter == 3)
-		{
-			Set[2] = 12;
-		}
-		if (counter == 4)
-		{
-			Set[3] = 12;
-		}
-		if (counter == 5)
-		{
-			Set[4] = 12;
+			Set[counter-1] = 12;
 		}
 
 
@@ -366,6 +349,7 @@ void main_menu() //xay dung menu
 }
 void main()
 {
+	showCur(0);
 	FixConsoleWindow();
 	StartGame();
 	thread t1(ThreadFunc); //Create thread for snake
