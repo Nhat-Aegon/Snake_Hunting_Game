@@ -63,7 +63,7 @@ void DrawSnakeAndFoodAfter() {
 
 bool kt_ran_cham_than() { // hàm kiểm tra rắn chạm thân
     for (int i = 0; i <=  SIZE_SNAKE; i++) { // so luong: vd la 4 dot ran
-        if (snake[0] == snake[i] && snake[0] == snake[i]) { 
+        if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) { 
             return true;
         }
     }
