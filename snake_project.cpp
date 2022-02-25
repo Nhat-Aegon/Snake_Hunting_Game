@@ -61,6 +61,15 @@ void DrawSnakeAndFoodAfter() {
 	GotoXY(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y);
 }
 
+bool kt_ran_cham_than() { // hàm kiểm tra rắn chạm thân
+    for (int i = 0; i <=  SIZE_SNAKE; i++) { // so luong: vd la 4 dot ran
+        if (snake[0] == snake[i] && snake[0] == snake[i]) { 
+            return true;
+        }
+    }
+    return false;
+}
+
 bool IsValid(int x, int y) {
 
 	for (int i = 0; i < SIZE_SNAKE; i++) {
