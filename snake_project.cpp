@@ -61,15 +61,6 @@ void DrawSnakeAndFoodAfter() {
 	GotoXY(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y);
 }
 
-bool kt_ran_cham_than() { // hàm kiểm tra rắn chạm thân
-    for (int i = 0; i <=  SIZE_SNAKE; i++) { // so luong: vd la 4 dot ran
-        if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) { 
-            return true;
-        }
-    }
-    return false;
-}
-
 bool IsValid(int x, int y) {
 
 	for (int i = 0; i < SIZE_SNAKE; i++) {
@@ -82,6 +73,170 @@ bool IsValid(int x, int y) {
 	}
 	return true;
 }
+
+void DrawNGate(int x, int y)
+{
+	for (int i = x - 1; i <= x + 1; i++)
+		for (int j = y - 1; j <= y; j++)
+		{
+			GotoXY(i, j);
+			printf("X");
+		}
+	GotoXY(x, y);
+	printf("U");
+	GotoXY(x, y - 1);
+	printf(" ");
+}
+void DrawEGate(int x, int y)
+{
+	for (int i = x; i <= x + 1; i++)
+		for (int j = y - 1; j <= y+1; j++)
+		{
+			GotoXY(i, j);
+			printf("X");
+		}
+	GotoXY(x, y);
+	printf("C");
+	GotoXY(x+1, y);
+	printf(" ");
+}
+void DrawSGate(int x, int y)
+{
+	for (int i = x - 1; i <= x + 1; i++)
+		for (int j = y; j <= y+1; j++)
+		{
+			GotoXY(i, j);
+			printf("X");
+		}
+	GotoXY(x, y);
+	printf("n");
+	GotoXY(x, y + 1);
+	printf(" ");
+}
+void DrawWGate(int x, int y)
+{
+	for (int i = x - 1; i <= x; i++)
+		for (int j = y - 1; j <= y+1; j++)
+		{
+			GotoXY(i, j);
+			printf("X");
+		}
+	GotoXY(x, y);
+	printf("D");
+	GotoXY(x - 1, y);
+	printf(" ");
+}
+bool pass = false;
+struct OPSTACLE
+{
+	int x;
+	int y;
+};
+OPSTACLE op[6] = { 0 };
+void ProcessGate()
+{
+	char direction[5] = { 'N','E','S','W' };
+	int x0 = 0, y0 = 0;
+	srand(time(NULL));
+	char drt = direction[rand() % 4];
+	do
+	{
+		x0 = rand() % WIDTH_CONSOLE;
+		y0 = rand() % HEIGH_CONSOLE;
+	} while (x0<4 || x0>WIDTH_CONSOLE - 4 || y0<4 || y0>HEIGH_CONSOLE - 4 || IsValid(x0, y0) == false);
+	int n = 0;
+	op[4].x = x0;
+	op[4].y = y0;
+	switch (drt)
+	{
+	case 'N':
+	{
+		DrawNGate(x0, y0);
+		for (int a = x0 - 1; a <= x0 + 1; a++)
+			for (int b = y0 - 1; b <= y0; b++)
+				if (a != x0)
+				{
+					op[n].x = a;
+					op[n].y = b;
+					n++;
+				}
+		op[5].x = x0;
+		op[5].y = y0 - 1;
+		break;
+	}
+	case 'E':
+	{
+		DrawEGate(x0, y0);
+		for (int a = x0; a <= x0 + 1; a++)
+			for (int b = y0 - 1; b <= y0 + 1; b++)
+				if (b != y0)
+				{
+					op[n].x = a;
+					op[n].y = b;
+					n++;
+				}
+		op[5].x = x0 + 1;
+		op[5].y = y0;
+		break;
+	}
+	case 'S':
+	{
+		DrawSGate(x0, y0);
+		for (int a = x0 - 1; a <= x0 + 1; a++)
+			for (int b = y0; b <= y0 + 1; b++)
+				if (a != x0)
+				{
+					op[n].x = a;
+					op[n].y = b;
+					n++;
+				}
+		op[5].x = x0;
+		op[5].y = y0 + 1;
+		break;
+	}
+	case 'W':
+	{
+		DrawWGate(x0, y0);
+		for (int a = x0 - 1; a <= x0; a++)
+			for (int b = y0 - 1; b <= y0 + 1; b++)
+				if (b != y0)
+				{
+					op[n].x = a;
+					op[n].y = b;
+					n++;
+				}
+		op[5].x = x0 - 1;
+		op[5].y = y0;
+		break;
+	}
+	}
+}
+
+bool IsGateTouch(POINT snake[], OPSTACLE op[])
+{
+	if (snake[SIZE_SNAKE - 1].x == op[5].x && snake[SIZE_SNAKE - 1].y == op[5].y)
+		pass = true;
+	for (int i = 0; i < 4; i++)
+		if (snake[SIZE_SNAKE - 1].x == op[i].x && snake[SIZE_SNAKE - 1].y == op[i].y)
+			return true;
+	if (snake[SIZE_SNAKE - 1].x == op[4].x && snake[SIZE_SNAKE - 1].y == op[4].y && pass == false)
+		return true;
+}
+
+bool kt_ran_cham_than() 
+{ // hàm kiểm tra rắn chạm thân
+	for (int i = 0; i < SIZE_SNAKE -1; i++) 
+	{ // so luong: vd la 4 dot ran
+		if (snake[SIZE_SNAKE - 1].x == snake[i].x && snake[SIZE_SNAKE - 1].y == snake[i].y) 
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+
+
 void GenerateFood() {
 	int x, y;
 	srand(time(NULL));
@@ -94,6 +249,7 @@ void GenerateFood() {
 		food[i] = { x,y };
 	}
 }
+
 void Eat() {
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
 
@@ -103,7 +259,7 @@ void Eat() {
 
 		FOOD_INDEX = 0;
 		SIZE_SNAKE = 6;
-
+		ProcessGate();
 		if (SPEED == MAX_SPEED) SPEED = 1;
 
 		else SPEED++;
@@ -207,6 +363,10 @@ void MoveUp()
 
 void ThreadFunc() {
 	while (true) {
+		if (IsGateTouch(snake, op) == true)
+			ProcessDead();
+		if(kt_ran_cham_than() == true)
+			ProcessDead();
 		if (STATE == 1) {//If my snake is alive
 			char* c = new char[2];
 			strcpy(c, " ");
@@ -346,7 +506,7 @@ void main_menu() //xay dung menu
 	int counter = 1;
 	char key;
 
-	while(true)
+	while (true)
 	{
 		GotoXY(52, 5);
 		setColor(Set[0]);
@@ -400,10 +560,10 @@ void main_menu() //xay dung menu
 
 		if (counter != 0)
 		{
-			Set[counter-1] = 12;
+			Set[counter - 1] = 12;
 		}
 	}
-	
+
 }
 
 void main()
@@ -412,4 +572,3 @@ void main()
 	FixConsoleWindow();
 	main_menu();
 }
-
