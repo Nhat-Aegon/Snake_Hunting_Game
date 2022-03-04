@@ -1,13 +1,16 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 //#include<stdlib.h>
 
-
 #include <iostream>
 #include<windows.h> //Mot header cua Windows, chua cac ham trong windows api
 #include<thread>
 #include<conio.h>
+#include<stdio.h>
+#include<string>
+
 using namespace std;
-#define MAX_SIZE_SNAKE 20
+
+#define MAX_SIZE_SNAKE 8
 #define MAX_SIZE_FOOD 10
 #define MAX_SPEED 3
 //Global variables
@@ -22,6 +25,8 @@ int HEIGH_CONSOLE, WIDTH_CONSOLE;// Width and height of console-screen
 int FOOD_INDEX; // current food-index
 int SIZE_SNAKE; // size of snake, initially maybe 6 units and maximum size maybe 32)
 int STATE; // State of snake: dead or alive
+int load_Index = 0;
+
 
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
@@ -90,20 +95,20 @@ void DrawNGate(int x, int y)
 void DrawEGate(int x, int y)
 {
 	for (int i = x; i <= x + 1; i++)
-		for (int j = y - 1; j <= y+1; j++)
+		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
 			printf("X");
 		}
 	GotoXY(x, y);
 	printf("C");
-	GotoXY(x+1, y);
+	GotoXY(x + 1, y);
 	printf(" ");
 }
 void DrawSGate(int x, int y)
 {
 	for (int i = x - 1; i <= x + 1; i++)
-		for (int j = y; j <= y+1; j++)
+		for (int j = y; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
 			printf("X");
@@ -116,7 +121,7 @@ void DrawSGate(int x, int y)
 void DrawWGate(int x, int y)
 {
 	for (int i = x - 1; i <= x; i++)
-		for (int j = y - 1; j <= y+1; j++)
+		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
 			printf("X");
@@ -221,13 +226,14 @@ bool IsGateTouch(POINT snake[], OPSTACLE op[])
 			return true;
 	if (snake[SIZE_SNAKE - 1].x == op[4].x && snake[SIZE_SNAKE - 1].y == op[4].y && pass == false)
 		return true;
+	return false;
 }
 
-bool kt_ran_cham_than() 
-{ // hàm kiểm tra rắn chạm thân
-	for (int i = 0; i < SIZE_SNAKE -1; i++) 
+bool kt_ran_cham_than()
+{
+	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{ // so luong: vd la 4 dot ran
-		if (snake[SIZE_SNAKE - 1].x == snake[i].x && snake[SIZE_SNAKE - 1].y == snake[i].y) 
+		if (snake[SIZE_SNAKE - 1].x == snake[i].x && snake[SIZE_SNAKE - 1].y == snake[i].y)
 		{
 			return true;
 		}
@@ -365,7 +371,7 @@ void ThreadFunc() {
 	while (true) {
 		if (IsGateTouch(snake, op) == true)
 			ProcessDead();
-		if(kt_ran_cham_than() == true)
+		if (kt_ran_cham_than() == true)
 			ProcessDead();
 		if (STATE == 1) {//If my snake is alive
 			char* c = new char[2];
@@ -390,7 +396,6 @@ void ThreadFunc() {
 			Sleep(100 / SPEED);
 		}
 	}
-
 }
 void DrawBoard(int x, int y, int width, int height)
 {
@@ -435,7 +440,7 @@ void StartGame() {
 }
 void ExitGame(HANDLE t) {
 	system("cls");
-	TerminateThread(t, 0);
+	int temp = TerminateThread(t, 0);
 }
 //Function pause game
 void PauseGame(HANDLE t) {
@@ -448,13 +453,24 @@ void newGame()
 	HANDLE handle_t1 = t1.native_handle(); //Take handle of thread
 	while (true) {
 		int temp = 0;
-		if (_kbhit())
+		if (!STATE)
 		{
 			temp = _getch();
 			if (temp >= 'a' && temp <= 'z')
 				temp -= 32;
+			if (temp == 'Y') StartGame();
+			else
+			{
+				return; // int main thi return 0
+			}
 		}
-		if (STATE == 1) {
+		else if (STATE) {
+			if (_kbhit())
+			{
+				temp = _getch();
+				if (temp >= 'a' && temp <= 'z')
+					temp -= 32;
+			}
 			if (temp == ' ') {
 				PauseGame(handle_t1);
 			}
@@ -473,13 +489,6 @@ void newGame()
 					else CHAR_LOCK = 'D';
 					MOVING = temp;
 				}
-			}
-		}
-		else {
-			if (temp == 'Y') StartGame();
-			else
-			{
-				return; // int main thi return 0
 			}
 		}
 	}
@@ -547,7 +556,6 @@ void main_menu() //xay dung menu
 			{
 				newGame();
 				return;
-				break;
 			}
 			break;
 			}
@@ -566,9 +574,10 @@ void main_menu() //xay dung menu
 
 }
 
-void main()
+int main()
 {
 	showCur(0);
 	FixConsoleWindow();
 	main_menu();
+	return 1;
 }
