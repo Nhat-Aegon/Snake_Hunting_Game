@@ -7,6 +7,7 @@
 #include<conio.h>
 #include<stdio.h>
 #include<string>
+#include<fstream>
 
 using namespace std;
 
@@ -44,6 +45,26 @@ void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
 }
 //Function to draw
+void save_game()
+{
+	system("cls");
+	const char* filePath = "save_game.txt";
+	char* name = new char(NULL);
+
+	GotoXY(58, 7);
+	cout << "Enter your username:  ";
+	cin.getline(name, 50);
+	fstream f;
+	f.open("Savegame.txt");
+	f << name;
+	f << SIZE_SNAKE;
+	f << SPEED;
+	f << MOVING;
+	f << CHAR_LOCK;
+	f.close();
+	if (!f)
+		cout << "Can't save your file, please try another options!";
+}
 
 void DrawSnakeAndFoodBefore(char* str) {
 	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
@@ -454,6 +475,12 @@ void newGame()
 				temp = _getch();
 				if (temp >= 'a' && temp <= 'z')
 					temp -= 32;
+			}
+			if (temp == 'L')
+			{
+				PauseGame(handle_t1);
+				save_game();
+				ExitGame(handle_t1);
 			}
 			if (temp == ' ') {
 				PauseGame(handle_t1);
