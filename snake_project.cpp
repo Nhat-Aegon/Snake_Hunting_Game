@@ -7,7 +7,6 @@
 #include<conio.h>
 #include<stdio.h>
 #include<string>
-#include<fstream>
 
 using namespace std;
 
@@ -27,7 +26,13 @@ int FOOD_INDEX; // current food-index
 int SIZE_SNAKE; // size of snake, initially maybe 6 units and maximum size maybe 32)
 int STATE; // State of snake: dead or alive
 int load_Index = 0;
-
+struct OPSTACLE
+{
+	int x;
+	int y;
+};
+OPSTACLE op[6] = { 0 };
+bool gate = false;
 
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
@@ -45,41 +50,25 @@ void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
 }
 //Function to draw
-void save_game()
-{
-	system("cls");
-	const char* filePath = "save_game.txt";
-	char* name = new char(NULL);
-
-	GotoXY(58, 7);
-	cout << "Enter your username:  ";
-	cin.getline(name, 50);
-	fstream f;
-	f.open("Savegame.txt");
-	f << name;
-	f << SIZE_SNAKE;
-	f << SPEED;
-	f << MOVING;
-	f << CHAR_LOCK;
-	f.close();
-	if (!f)
-		cout << "Can't save your file, please try another options!";
-}
 
 void DrawSnakeAndFoodBefore(char* str) {
-	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
-	if (str == " ")
-		cout << str;
-
+	if (gate == false)
+	{
+		GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
+		if (str == " ")
+			cout << str;
+	}
 	for (int i = 0; i < SIZE_SNAKE; i++) {
 		GotoXY(snake[i].x, snake[i].y);
 		cout << ' ';
 	}
 }
 void DrawSnakeAndFoodAfter() {
-	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
-	cout << ID[SIZE_SNAKE];
-
+	if (gate == false)
+	{
+		GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
+		cout << ID[SIZE_SNAKE];
+	}
 	for (int i = SIZE_SNAKE - 1; i >= 0; i--) {
 		GotoXY(snake[i].x, snake[i].y);
 		cout << ID[SIZE_SNAKE - i - 1];
@@ -153,12 +142,7 @@ void DrawWGate(int x, int y)
 	printf(" ");
 }
 bool pass = false;
-struct OPSTACLE
-{
-	int x;
-	int y;
-};
-OPSTACLE op[6] = { 0 };
+
 void ProcessGate()
 {
 	char direction[5] = { 'N','E','S','W' };
@@ -169,7 +153,7 @@ void ProcessGate()
 	{
 		x0 = rand() % WIDTH_CONSOLE;
 		y0 = rand() % HEIGH_CONSOLE;
-	} while (x0<4 || x0>WIDTH_CONSOLE - 4 || y0<4 || y0>HEIGH_CONSOLE - 4 || IsValid(x0, y0) == false);
+	} while (x0<4 || x0>(WIDTH_CONSOLE - 4) || y0<4 || y0>(HEIGH_CONSOLE - 4) || IsValid(x0, y0) == false);
 	int n = 0;
 	op[4].x = x0;
 	op[4].y = y0;
@@ -261,9 +245,9 @@ bool isTouchBody()
 	}
 	return false;
 }
-bool isTouchwall(int x_head_position,int y_head_position)
+bool isTouchwall(int x_head_position, int y_head_position)
 {
-	if (x_head_position <= 0 || y_head_position <= 0 || x_head_position >= WIDTH_CONSOLE-1 || y_head_position >= HEIGH_CONSOLE-1)
+	if (x_head_position <= 0 || y_head_position <= 0 || x_head_position >= WIDTH_CONSOLE || y_head_position >= HEIGH_CONSOLE)
 		return true;
 	return false;
 }
@@ -283,17 +267,17 @@ void GenerateFood() {
 
 void Eat() {
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
-
+	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
+	printf(" ");
 	if (FOOD_INDEX == MAX_SIZE_FOOD - 1)
 	{
-
-		FOOD_INDEX = 0;
+		gate = true;
 		ProcessGate();
-		if (SPEED == MAX_SPEED) SPEED = 1;
-
+		
+		if (SPEED == MAX_SPEED) 
+			SPEED = 1;
 		else SPEED++;
 		GenerateFood();
-
 	}
 	else {
 		FOOD_INDEX++;
@@ -476,12 +460,6 @@ void newGame()
 				if (temp >= 'a' && temp <= 'z')
 					temp -= 32;
 			}
-			if (temp == 'L')
-			{
-				PauseGame(handle_t1);
-				save_game();
-				ExitGame(handle_t1);
-			}
 			if (temp == ' ') {
 				PauseGame(handle_t1);
 			}
@@ -522,7 +500,7 @@ void showCur(bool CursorVisibility) // ham hien/an con tro
 }
 void main_menu() //xay dung menu
 {
-	int Set[] = { 7,7,7,7,7}; // DEFAULT COLORS
+	int Set[] = { 7,7,7,7,7 }; // DEFAULT COLORS
 	int counter = 1;
 	char key;
 
@@ -543,7 +521,7 @@ void main_menu() //xay dung menu
 		GotoXY(51, 8);
 		setColor(Set[3]);
 		cout << "LAST GAME";
-		
+
 		GotoXY(54, 9);
 		setColor(Set[4]);
 		cout << "QUIT";
