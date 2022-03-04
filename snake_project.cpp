@@ -229,7 +229,7 @@ bool IsGateTouch(POINT snake[], OPSTACLE op[])
 	return false;
 }
 
-bool kt_ran_cham_than()
+bool isTouchBody()
 {
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{ // so luong: vd la 4 dot ran
@@ -240,8 +240,12 @@ bool kt_ran_cham_than()
 	}
 	return false;
 }
-
-
+bool isTouchwall(int x_head_position,int y_head_position)
+{
+	if (x_head_position <= 0 || y_head_position <= 0 || x_head_position >= WIDTH_CONSOLE-1 || y_head_position >= HEIGH_CONSOLE-1)
+		return true;
+	return false;
+}
 
 void GenerateFood() {
 	int x, y;
@@ -260,11 +264,9 @@ void Eat() {
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
 
 	if (FOOD_INDEX == MAX_SIZE_FOOD - 1)
-
 	{
 
 		FOOD_INDEX = 0;
-		SIZE_SNAKE = 6;
 		ProcessGate();
 		if (SPEED == MAX_SPEED) SPEED = 1;
 
@@ -287,91 +289,72 @@ void ProcessDead()
 
 void MoveRight()
 {
-	if (snake[SIZE_SNAKE - 1].x + 1 == WIDTH_CONSOLE)
-	{
+	if (isTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y))
 		ProcessDead();
-	}
-	else
+	if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
-		if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
-		{
-			Eat();
-		}
-		for (int i = 0; i < SIZE_SNAKE - 1; i++)
-		{
-			snake[i].x = snake[i + 1].x;
-			snake[i].y = snake[i + 1].y;
-
-		}
-		snake[SIZE_SNAKE - 1].x++;
+		Eat();
 	}
+	for (int i = 0; i < SIZE_SNAKE - 1; i++)
+	{
+		snake[i].x = snake[i + 1].x;
+		snake[i].y = snake[i + 1].y;
+	}
+	snake[SIZE_SNAKE - 1].x++;
 }
 void MoveLeft()
 {
-	if (snake[SIZE_SNAKE - 1].x - 1 == 0)
-	{
+	if (isTouchwall(snake[SIZE_SNAKE - 1].x - 1, snake[SIZE_SNAKE - 1].y))
 		ProcessDead();
+	if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
+	{
+		Eat();
 	}
-	else {
-		if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
-		{
-			Eat();
-		}
-		for (int i = 0; i < SIZE_SNAKE - 1; i++)
-		{
-			snake[i].x = snake[i + 1].x;
-			snake[i].y = snake[i + 1].y;
+	for (int i = 0; i < SIZE_SNAKE - 1; i++)
+	{
+		snake[i].x = snake[i + 1].x;
+		snake[i].y = snake[i + 1].y;
 
-		}
-		snake[SIZE_SNAKE - 1].x--;
 	}
+	snake[SIZE_SNAKE - 1].x--;
 }
 void MoveDown()
 {
-	if (snake[SIZE_SNAKE - 1].y + 1 == HEIGH_CONSOLE)
-	{
+	if (isTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1))
 		ProcessDead();
-	}
-	else {
-		if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
-		{
-			Eat();
-		}
-		for (int i = 0; i < SIZE_SNAKE - 1; i++)
-		{
-			snake[i].x = snake[i + 1].x;
-			snake[i].y = snake[i + 1].y;
 
-		}
-		snake[SIZE_SNAKE - 1].y++;
+	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
+	{
+		Eat();
 	}
+	for (int i = 0; i < SIZE_SNAKE - 1; i++)
+	{
+		snake[i].x = snake[i + 1].x;
+		snake[i].y = snake[i + 1].y;
+
+	}
+	snake[SIZE_SNAKE - 1].y++;
 }
 void MoveUp()
 {
-	if (snake[SIZE_SNAKE - 1].y - 1 == 0)
-	{
+	if (isTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y - 1))
 		ProcessDead();
+	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
+	{
+		Eat();
 	}
-	else {
-		if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
-		{
-			Eat();
-		}
-		for (int i = 0; i < SIZE_SNAKE - 1; i++)
-		{
-			snake[i].x = snake[i + 1].x;
-			snake[i].y = snake[i + 1].y;
+	for (int i = 0; i < SIZE_SNAKE - 1; i++)
+	{
+		snake[i].x = snake[i + 1].x;
+		snake[i].y = snake[i + 1].y;
 
-		}
-		snake[SIZE_SNAKE - 1].y--;
 	}
+	snake[SIZE_SNAKE - 1].y--;
 }
 
 void ThreadFunc() {
 	while (true) {
-		if (IsGateTouch(snake, op) == true)
-			ProcessDead();
-		if (kt_ran_cham_than() == true)
+		if (IsGateTouch(snake, op) || isTouchBody())
 			ProcessDead();
 		if (STATE == 1) {//If my snake is alive
 			char* c = new char[2];
@@ -423,7 +406,6 @@ void ResetData() {
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
 	// Initialize default values for snake
 	snake[0] = { 10, 5 }; snake[1] = { 11, 5 }; // khoi tao giao tri cho ran
-	// dau ran nam o vi tri snake[5]
 	GenerateFood();
 	for (int i = 0; i < 6; i++)
 	{
@@ -441,6 +423,8 @@ void StartGame() {
 void ExitGame(HANDLE t) {
 	system("cls");
 	int temp = TerminateThread(t, 0);
+	GotoXY(53, 6);
+	cout << "THANKS FOR PLAYING";
 }
 //Function pause game
 void PauseGame(HANDLE t) {
@@ -461,7 +445,7 @@ void newGame()
 			if (temp == 'Y') StartGame();
 			else
 			{
-				return; // int main thi return 0
+				ExitGame(handle_t1); // int main thi return 0
 			}
 		}
 		else if (STATE) {
@@ -511,7 +495,7 @@ void showCur(bool CursorVisibility) // ham hien/an con tro
 }
 void main_menu() //xay dung menu
 {
-	int Set[] = { 7,7,7,7 }; // DEFAULT COLORS
+	int Set[] = { 7,7,7,7,7}; // DEFAULT COLORS
 	int counter = 1;
 	char key;
 
@@ -532,6 +516,10 @@ void main_menu() //xay dung menu
 		GotoXY(51, 8);
 		setColor(Set[3]);
 		cout << "LAST GAME";
+		
+		GotoXY(54, 9);
+		setColor(Set[4]);
+		cout << "QUIT";
 
 		key = _getch();
 
@@ -539,12 +527,12 @@ void main_menu() //xay dung menu
 		{
 			counter--;
 			if (counter == 0)
-				counter = 4;
+				counter = 5;
 		}
 		if ((key == 'S' || key == 's'))
 		{
 			counter++;
-			if (counter > 4)
+			if (counter > 5)
 				counter = 1;
 
 		}
@@ -561,7 +549,7 @@ void main_menu() //xay dung menu
 			}
 		}
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			Set[i] = 7;
 		}
