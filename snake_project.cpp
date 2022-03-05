@@ -7,6 +7,7 @@
 #include<conio.h>
 #include<stdio.h>
 #include<string>
+#include<fstream>
 
 using namespace std;
 
@@ -26,6 +27,8 @@ int FOOD_INDEX; // current food-index
 int SIZE_SNAKE; // size of snake, initially maybe 6 units and maximum size maybe 32)
 int STATE; // State of snake: dead or alive
 int load_Index = 0;
+int count_savegame = 0;
+
 struct OPSTACLE
 {
 	int x;
@@ -50,6 +53,42 @@ void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
 }
 //Function to draw
+void save_game()
+{
+	// khai bao
+	system("cls");
+	const char* filePath = "save_game.txt";
+	char* name = new char(NULL);
+
+	// kiem tra file name
+	count_savegame++;
+	char savegame1[50];
+	if (count_savegame == 4)
+	{
+		strcpy(savegame1, name);
+
+	}
+
+	// doc du lieu
+	GotoXY(58, 7);
+	cout << "Enter your username:  ";
+	cin.getline(name, 50);
+	//save game vao file txt
+	fstream f;
+	f.open("Savegame.txt");
+	f << name << endl;
+	f << SIZE_SNAKE << endl;
+	for (int i = 0; i < SIZE_SNAKE; i++)
+	{
+		f << snake[i].x << ' ' << snake[i].y;
+	}
+	f << endl;
+	f << SPEED << endl;
+	f << MOVING << ' '<< CHAR_LOCK << endl;
+	f.close();
+	if (!f)
+		cout << "Can't save your file, please try another options!";
+}
 
 void DrawSnakeAndFoodBefore(char* str) {
 	if (gate == false)
@@ -459,6 +498,12 @@ void newGame()
 				temp = _getch();
 				if (temp >= 'a' && temp <= 'z')
 					temp -= 32;
+			}
+			if (temp == 'L')
+			{
+				PauseGame(handle_t1);
+				save_game();
+				ExitGame(handle_t1);
 			}
 			if (temp == ' ') {
 				PauseGame(handle_t1);
