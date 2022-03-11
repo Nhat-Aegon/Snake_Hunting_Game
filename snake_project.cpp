@@ -85,6 +85,11 @@ void save_game()
 	f << endl;
 	f << SPEED << endl;
 	f << MOVING << ' '<< CHAR_LOCK << endl;
+	f << gate << endl; // =1 co nghia là xuat hien gate, =0 la khong co gate
+	if (gate == 0) // neu khong co gate thi luu toa do cua food index
+	{
+		f << (food[FOOD_INDEX].x << ' ' << food[FOOD_INDEX].y);
+	}
 	f.close();
 	if (!f)
 		cout << "Can't save your file, please try another options!";
