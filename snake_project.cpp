@@ -484,6 +484,7 @@ void newGame()
 	StartGame();
 	thread t1(ThreadFunc); //Create thread for snake
 	HANDLE handle_t1 = t1.native_handle(); //Take handle of thread
+	int isPauseGame = 0;
 	while (true) {
 		int temp = 0;
 		if (!STATE)
@@ -504,14 +505,9 @@ void newGame()
 				if (temp >= 'a' && temp <= 'z')
 					temp -= 32;
 			}
-			if (temp == 'L')
-			{
-				PauseGame(handle_t1);
-				save_game();
-				ExitGame(handle_t1);
-			}
-			if (temp == ' ') {
-				PauseGame(handle_t1);
+			if (temp == ' ' && !isPauseGame) {
+					PauseGame(handle_t1);
+					isPauseGame = 1;
 			}
 			else if (temp == 27) {
 				ExitGame(handle_t1);
@@ -519,9 +515,35 @@ void newGame()
 			}
 			else {
 				//ResumeThread(handle_t1); //neu de day thi khong the bam pause duoc
+				if (temp == ' ' && isPauseGame)
+				{
+					switch (CHAR_LOCK)
+					{
+					case 'D':
+					{
+						temp = 'A';
+						break;
+					}
+					case 'A':
+					{
+						temp = 'D';
+						break;
+					}
+					case 'W':
+					{
+						temp = 'S';
+						break;
+					}
+					case 'S':
+					{
+						temp = 'W';
+					}
+					}
+					isPauseGame = 0;
+				}
 				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
 				{
-					ResumeThread(handle_t1); //de day thi bam pause duoc nhung so lan bam "P" phai tuong ung so lan bam chuyen dong ve sau thi moi chuyen dong tiep duoc
+					ResumeThread(handle_t1); 
 					if (temp == 'D') CHAR_LOCK = 'A';
 					else if (temp == 'W') CHAR_LOCK = 'S';
 					else if (temp == 'S') CHAR_LOCK = 'W';
@@ -532,7 +554,6 @@ void newGame()
 		}
 	}
 }
-
 void setColor(int color) // ham doi mau chu
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
