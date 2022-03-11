@@ -571,7 +571,7 @@ void showCur(bool CursorVisibility) // ham hien/an con tro
 }
 void main_menu() //xay dung menu
 {
-	int Set[] = { 7,7,7,7,7 }; // DEFAULT COLORS
+	int Set[] = { 12,7,7,7,7 }; // DEFAULT COLORS
 	int counter = 1;
 	char key;
 
