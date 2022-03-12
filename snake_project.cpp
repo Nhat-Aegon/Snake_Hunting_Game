@@ -571,29 +571,47 @@ void showCur(bool CursorVisibility) // ham hien/an con tro
 }
 void main_menu() //xay dung menu
 {
+	int i = 1;
 	int Set[] = { 12,7,7,7,7 }; // DEFAULT COLORS
 	int counter = 1;
 	char key;
-
+	//setColor(i);	
+	
 	while (true)
 	{
-		GotoXY(52, 5);
+		i = !i;
+		GotoXY(0, 0);
+		if (i) {
+			setColor(13);
+		}
+		else {
+			setColor(10);
+		}
+		cout << R"(
+			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
+			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+                                                                           
+		)";
+		GotoXY(54, 9);
 		setColor(Set[0]);
 		cout << "NEW GAME";
 
-		GotoXY(50, 6);
+		GotoXY(52, 10);
 		setColor(Set[1]);
 		cout << "HIGHEST SCORE";
 
-		GotoXY(52, 7);
+		GotoXY(55, 11);
 		setColor(Set[2]);
 		cout << "CONTACT";
 
-		GotoXY(51, 8);
+		GotoXY(54, 12);
 		setColor(Set[3]);
 		cout << "LAST GAME";
 
-		GotoXY(54, 9);
+		GotoXY(56, 13);
 		setColor(Set[4]);
 		cout << "QUIT";
 
