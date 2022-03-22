@@ -101,14 +101,13 @@ void GenerateFood(){
 			x = rand() % (WIDTH_CONSOLE+4) + 1;
 			y = rand() % (HEIGH_CONSOLE+4) + 1;
 			if (x <= 4) x = 5;
-			if (x >= HEIGH_CONSOLE + 3) x = HEIGH_CONSOLE - 1;
+			if (x >= HEIGH_CONSOLE + 4) x = HEIGH_CONSOLE - 1;
 			if (y <= 4) y = 5;
-			if (y >= WIDTH_CONSOLE + 3) y = WIDTH_CONSOLE - 1;
+			if (y >= WIDTH_CONSOLE + 4) y = WIDTH_CONSOLE - 1;
 		} while (!IsValid(x, y));
 		food[i] = { x,y };
 	}
 }
-
 
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
 void DrawBoard(int x, int y, int width, int height)
@@ -213,13 +212,6 @@ void DrawWGate(int x, int y)
 	printf(" ");
 }
 bool pass = false;
-
-bool isTouchwall(int x_head_position, int y_head_position)
-{
-	if (x_head_position <= 0 || y_head_position <= 0 || x_head_position >= WIDTH_CONSOLE || y_head_position >= HEIGH_CONSOLE)
-		return true;
-	return false;
-}
 void ProcessGate()
 {
 	char direction[5] = { 'N','E','S','W' };
