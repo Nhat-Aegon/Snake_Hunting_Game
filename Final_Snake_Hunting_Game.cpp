@@ -98,35 +98,42 @@ void GenerateFood(){
 	srand(time(NULL));
 	for (int i = 0; i < MAX_SIZE_FOOD; i++) {
 		do {
-			x = rand() % (WIDTH_CONSOLE - 1) + 1;
-			y = rand() % (HEIGH_CONSOLE - 1) + 1;
-
+			x = rand() % (WIDTH_CONSOLE+4) + 1;
+			y = rand() % (HEIGH_CONSOLE+4) + 1;
+			if (x <= 4) x = 5;
+			if (x >= HEIGH_CONSOLE + 3) x = HEIGH_CONSOLE - 1;
+			if (y <= 4) y = 5;
+			if (y >= WIDTH_CONSOLE + 3) y = WIDTH_CONSOLE - 1;
 		} while (!IsValid(x, y));
 		food[i] = { x,y };
 	}
 }
 
+
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
 void DrawBoard(int x, int y, int width, int height)
 {
 	// draw up and low walls
+	SetColor(50);
 	for (int i = 0; i <= width; i++)
 	{
 		GotoXY(x + i, y);
-		cout << 'X';
+		cout << char(177);
 		GotoXY(x + i, y + height);
-		cout << 'X';
+		cout << char(177);
 	}
 	// Draw 2 side walls
 	for (int i = 1; i <= height; i++)
 	{
 		GotoXY(x, y + i);
-		cout << 'X';
+		cout << char(177);
 		GotoXY(x + width, y + i);
-		cout << 'X';
+		cout << char(177);
 	}
+	SetColor(7);
 	GotoXY(width + 1, height + 1);
 }
+
 
 void DrawSnakeAndFoodBefore(char* str) {
 	if (gate == false)
@@ -321,9 +328,12 @@ void GameGuide()
 void ProcessDead()
 {
 	STATE = 0;
-	GotoXY(0, HEIGH_CONSOLE + 2);
-	printf("Dead, type y to continue or anykey to exit");
+	GotoXY(3, HEIGH_CONSOLE + 7);
+	SetColor(12);
+	printf("DEAD!!! Type Y to continue or anykey to exit");
+	SetColor(7);
 }
+
 void ExitGame(HANDLE t) {
 	system("cls");
 	int temp = TerminateThread(t, 0);
@@ -382,7 +392,7 @@ void save_game()
 	f << endl;
 	f << SPEED << endl;
 	f << MOVING << ' ' << CHAR_LOCK << endl;
-	f << gate << endl; // =1 co nghia là xuat hien gate, =0 la khong co gate
+	f << gate << endl; // =1 co nghia lÃ  xuat hien gate, =0 la khong co gate
 	if (gate == 0) // neu khong co gate thi luu toa do cua food index
 	{
 		f << food[FOOD_INDEX].x << ' ' << food[FOOD_INDEX].y << endl;
@@ -428,13 +438,13 @@ bool IsTouchBody()
 }
 bool IsTouchwall(int x_head_position, int y_head_position)
 {
-	if (x_head_position <= 0 || y_head_position <= 0 || x_head_position >= WIDTH_CONSOLE || y_head_position >= HEIGH_CONSOLE)
+	if (x_head_position <= 3 || y_head_position <= 3 || x_head_position >= WIDTH_CONSOLE+3 || y_head_position >= HEIGH_CONSOLE+3)
 		return true;
 	return false;
 }
 void MoveRight()
 {
-	if (isTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y))
 		ProcessDead();
 	if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
@@ -449,7 +459,7 @@ void MoveRight()
 }
 void MoveLeft()
 {
-	if (isTouchwall(snake[SIZE_SNAKE - 1].x - 1, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x - 1, snake[SIZE_SNAKE - 1].y))
 		ProcessDead();
 	if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
@@ -465,7 +475,7 @@ void MoveLeft()
 }
 void MoveDown()
 {
-	if (isTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1))
 		ProcessDead();
 
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
@@ -482,7 +492,7 @@ void MoveDown()
 }
 void MoveUp()
 {
-	if (isTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y - 1))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y - 1))
 		ProcessDead();
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
 	{
@@ -506,9 +516,10 @@ void ResetData() {
 	for (int i = 0; i < 6; i++)
 	{
 		snake[6 - i - 1].x = 15 - i;
-		snake[6 - i - 1].y = 5;
+		snake[6 - i - 1].y = 7;
 	}
 }
+
 void ResetDataLoadGame()
 {
 	//Initialize the global values
@@ -597,10 +608,11 @@ void StartGame(int x) {
 		ResetDataLoadGame();
 	}
 	system("cls");
-	DrawBoard(0, 0, WIDTH_CONSOLE, HEIGH_CONSOLE); // Draw game
-
+	DrawBoard(4, 4, WIDTH_CONSOLE, HEIGH_CONSOLE); // Draw game
+	GameGuide();
 	STATE = 1;//Start running Thread    
 }
+
 void NewGame(int x)
 {
 	StartGame(x);
