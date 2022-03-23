@@ -731,11 +731,15 @@ int LoadingAnimation() {
 	GotoXY(30, 17);
 	setColor(14);
 	cout << "Please wait while the game is loading! ";
+	float sum = 1.67;
 	while (true)
 	{
+		SetColor(i);
+		GotoXY(93, y);
+		cout << int(sum) << "%";
+		sum += 1.67;
 		GotoXY(x, y);
 		cout << static_cast<char>(219);
-		setColor(i);
 		if (check == 0) {
 			x++;
 		}
