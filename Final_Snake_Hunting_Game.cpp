@@ -115,17 +115,19 @@ void DrawBoard(int x, int y, int width, int height)
 	SetColor(50);
 	for (int i = 0; i <= width; i++)
 	{
+		Sleep(5);
 		GotoXY(x + i, y);
 		cout << char(177);
-		GotoXY(x + i, y + height);
+		GotoXY(x + (width-i), y + height);
 		cout << char(177);
 	}
 	// Draw 2 side walls
 	for (int i = 1; i <= height; i++)
 	{
+		Sleep(30);
 		GotoXY(x, y + i);
 		cout << char(177);
-		GotoXY(x + width, y + i);
+		GotoXY(x + width, y + (height-i));
 		cout << char(177);
 	}
 	SetColor(7);
