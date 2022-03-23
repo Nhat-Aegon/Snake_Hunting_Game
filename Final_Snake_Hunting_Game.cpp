@@ -22,7 +22,7 @@ int CHAR_LOCK;//used to determine the direction my snake cannot move (At a momen
 int MOVING;//used to determine the direction my snake moves (At a moment, there are three directions my snake can move)
 int SPEED;// Standing for level, the higher the level, the quicker the speed
 int HEIGH_CONSOLE, WIDTH_CONSOLE;// Width and height of console-screen
-int FOOD_INDEX; // current food-index
+int FOOD_INDEX = -1; // current food-index
 int SIZE_SNAKE; // size of snake, initially maybe 6 units and maximum size maybe 32)
 int STATE; // State of snake: dead or alive
 int load_Index = 0;
@@ -46,6 +46,7 @@ void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua 
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
 											// duoc su dung de bieu dien 1 dieu gi do
 												// GetConsoleWindow la ham tra ve 1 handle toi window phu hop voi kieu du lieu duoc goi
+
 	long style = GetWindowLong(consoleWindow, GWL_STYLE); // lay thong tin 32-bit cua 1 cua so, GWL_STYLE lay thong tin kieu cua cua so console
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME); // dieu chinh thong so cua style sao cho ngan nguoi dung phong to cua so hoac thay doi kich thuoc cua so
 	SetWindowLong(consoleWindow, GWL_STYLE, style); // thay doi thong tin cua 1 cua so, gia tri muon thay the
@@ -131,7 +132,6 @@ void DrawBoard(int x, int y, int width, int height)
 	GotoXY(width + 1, height + 1);
 }
 
-
 void DrawSnakeAndFoodBefore(char* str) {
 	if (gate == false)
 	{
@@ -210,6 +210,7 @@ void DrawWGate(int x, int y)
 	printf(" ");
 }
 bool pass = false;
+
 void ProcessGate()
 {
 	char direction[5] = { 'N','E','S','W' };
@@ -308,6 +309,7 @@ void DrawScoreAndLevel()
 {
 	// Ham nay di chung voi calculate score
 }
+
 void GameGuide()
 {
 	SetColor(13);
@@ -342,7 +344,6 @@ void ProcessDead()
 	printf("DEAD!!! Type Y to play again or anykey to exit");
 	SetColor(7);
 }
-
 void ExitGame(HANDLE t) {
 	system("cls");
 	int temp = TerminateThread(t, 0);
@@ -429,9 +430,8 @@ void Eat() {
 		GenerateFood();
 	}
 	else {
-		FOOD_INDEX++;
+		GenerateFood();
 		SIZE_SNAKE++;
-
 	}
 } //khi ran an moi thi do dai ran tang va vi tri moi duoc thay doi de tranh viec vi tri moi xuat hien tai vi tri con ran
 bool IsTouchBody()
@@ -447,7 +447,7 @@ bool IsTouchBody()
 }
 bool IsTouchwall(int x_head_position, int y_head_position)
 {
-	if (x_head_position <= 3 || y_head_position <= 3 || x_head_position >= WIDTH_CONSOLE+3 || y_head_position >= HEIGH_CONSOLE+3)
+	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= WIDTH_CONSOLE+4 || y_head_position >= HEIGH_CONSOLE+4)
 		return true;
 	return false;
 }
@@ -517,7 +517,7 @@ void MoveUp()
 }
 void ResetData() {
 	//Initialize the global values
-	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 100,
+	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 75,
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
 	// Initialize default values for snake
 	snake[0] = { 10, 5 }; snake[1] = { 11, 5 }; // khoi tao giao tri cho ran
@@ -528,7 +528,6 @@ void ResetData() {
 		snake[6 - i - 1].y = 7;
 	}
 }
-
 void ResetDataLoadGame()
 {
 	//Initialize the global values
@@ -564,7 +563,7 @@ void ResetDataLoadGame()
 	MOVING = char(temp);
 	CHAR_LOCK = char(temp1);
 
-	WIDTH_CONSOLE = 100;
+	WIDTH_CONSOLE = 75;
 	HEIGH_CONSOLE = 20;
 
 	fscanf_s(fin, "%d", &temp);
@@ -578,44 +577,7 @@ void ResetDataLoadGame()
 
 /////////////////////////////////////////////////////////////////////////				Header 4: Animations				/////////////////////////////////////////
 
-int LoadingAnimation() {
-	system("cls");
-	int i = 7;
-	int x = 30;
-	int y = 20;
-	int check = 0;
-	GotoXY(0, 0);
-	setColor(12);
-	cout << R"(
-			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
-			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
-			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
-			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
 
-		)";
-	GotoXY(30, 17);
-	setColor(14);
-	cout << "Please wait while the game is loading! ";
-	float sum = 1.7;
-	while (true)
-	{
-		SetColor(i);
-		GotoXY(93, y);
-		cout << int(sum) << "%";
-		sum += 1.7;
-		GotoXY(x, y);
-		cout << static_cast<char>(219);
-		if (check == 0) {
-			x++;
-		}
-		if (x == 90) {
-			break;
-		}
-		Sleep(70);
-	}
-	return 0;
-}
 
 /////////////////////////////////////////////////////////////////////////				Header 5: Play Game								/////////////////////////////////////////
 void ThreadFunc() {
@@ -658,7 +620,6 @@ void StartGame(int x) {
 	GameGuide();
 	STATE = 1;//Start running Thread    
 }
-
 void NewGame(int x)
 {
 	StartGame(x);
@@ -747,8 +708,45 @@ void NewGame(int x)
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
+int LoadingAnimation() {
+	system("cls");
+	int i = 7;
+	int x = 30;
+	int y = 20;
+	int check = 0;
+	GotoXY(0, 0);
+	SetColor(12);
+	cout << R"(
+			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
+			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+		)";
+	GotoXY(30, 17);
+	SetColor(14);
+	cout << "Please wait while the game is loading! ";
+	float sum = 1.7;
+	while (true)
+	{
+		SetColor(i);
+		GotoXY(93, y);
+		cout << int(sum) << "%";
+		sum += 1.7;
+		GotoXY(x, y);
+		cout << static_cast<char>(219);
+		if (check == 0) {
+			x++;
+		}
+		if (x == 90) {
+			break;
+		}
+		Sleep(70);
+	}
+	return 0;
+}
 void MainMenu() //xay dung menu // ten cu~: main_menu
 {
 	int i = 1;
