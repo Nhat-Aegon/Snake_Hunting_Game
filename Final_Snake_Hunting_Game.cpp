@@ -731,13 +731,13 @@ int LoadingAnimation() {
 	GotoXY(30, 17);
 	setColor(14);
 	cout << "Please wait while the game is loading! ";
-	float sum = 1.67;
+	float sum = 1.7;
 	while (true)
 	{
 		SetColor(i);
 		GotoXY(93, y);
 		cout << int(sum) << "%";
-		sum += 1.67;
+		sum += 1.7;
 		GotoXY(x, y);
 		cout << static_cast<char>(219);
 		if (check == 0) {
@@ -746,7 +746,7 @@ int LoadingAnimation() {
 		if (x == 90) {
 			break;
 		}
-		Sleep(100);
+		Sleep(70);
 	}
 	return 0;
 }
