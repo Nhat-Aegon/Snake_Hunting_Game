@@ -690,6 +690,41 @@ void NewGame(int x)
 
 ///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
 
+int LoadingAnimation() {
+	system("cls");
+	int i = 7;
+	int x = 30;
+	int y = 20;
+	int check = 0;
+	GotoXY(0, 0);
+	setColor(12);
+	cout << R"(
+			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
+			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+
+		)";
+	GotoXY(30, 17);
+	setColor(14);
+	cout << "Please wait while the game is loading! ";
+	while (true)
+	{
+		GotoXY(x, y);
+		cout << static_cast<char>(219);
+		setColor(i);
+		if (check == 0) {
+			x++;
+		}
+		if (x == 90) {
+			break;
+		}
+		Sleep(100);
+	}
+	return 0;
+}
+
 void MainMenu() //xay dung menu // ten cu~: main_menu
 {
 	int i = 1;
@@ -757,11 +792,13 @@ void MainMenu() //xay dung menu // ten cu~: main_menu
 			{
 			case 1:
 			{
+				LoadingAnimation();
 				NewGame(1);
 				return;
 			}
 			case 4:
 			{
+				LoadingAnimation();
 				NewGame(2);
 				return;
 			}
