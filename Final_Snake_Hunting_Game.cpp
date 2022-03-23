@@ -96,17 +96,15 @@ bool IsValid(int x, int y) {
 void GenerateFood(){
 	int x, y;
 	srand(time(NULL));
-	for (int i = 0; i < MAX_SIZE_FOOD; i++) {
 		do {
 			x = rand() % (WIDTH_CONSOLE+4) + 1;
 			y = rand() % (HEIGH_CONSOLE+4) + 1;
 			if (x <= 4) x = 5;
-			if (x >= HEIGH_CONSOLE + 4) x = HEIGH_CONSOLE - 1;
+			if (x >= WIDTH_CONSOLE + 4) x = WIDTH_CONSOLE - 1;
 			if (y <= 4) y = 5;
-			if (y >= WIDTH_CONSOLE + 4) y = WIDTH_CONSOLE - 1;
+			if (y >= HEIGH_CONSOLE + 4) y = HEIGH_CONSOLE - 1;
 		} while (!IsValid(x, y));
-		food[i] = { x,y };
-	}
+		food[++FOOD_INDEX] = { x,y };
 }
 
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
@@ -310,10 +308,29 @@ void DrawScoreAndLevel()
 {
 	// Ham nay di chung voi calculate score
 }
-
 void GameGuide()
 {
-	// ham huong dan
+	SetColor(13);
+	for (int i = 0; i < 36; i++)
+	{
+		GotoXY(83+i, 11);
+		cout << char(223);
+		GotoXY(83+i, 16);
+		cout << char(223);
+	}
+	cout << endl;
+	SetColor(7);
+	GotoXY(84, 12);
+	cout << "Press SPACE to pause/continue game" << endl;
+	GotoXY(84, 13);
+	cout << "Press 'ESC' to exit game" << endl;
+	GotoXY(84, 14);
+	cout << "Press 'P' to save game " << endl;
+	//cout << R"(
+	//	       Press SPACE to pause/continue game
+	//		   Press 'ESC' to exit game  
+	//		   Press 'P' to save game                                                            
+	//	)";
 }
 
 /////////////////////////////////////////////////////////////////////////				Header 2: Special Features								/////////////////////////////////////////
@@ -322,7 +339,7 @@ void ProcessDead()
 	STATE = 0;
 	GotoXY(3, HEIGH_CONSOLE + 7);
 	SetColor(12);
-	printf("DEAD!!! Type Y to continue or anykey to exit");
+	printf("DEAD!!! Type Y to play again or anykey to exit");
 	SetColor(7);
 }
 
@@ -639,6 +656,10 @@ void NewGame(int x)
 			}
 			else if (temp == ' ' && !isPauseGame) {
 				PauseGame(handle_t1);
+				SetColor(12);
+				GotoXY(4, HEIGH_CONSOLE + 6);
+				cout << "YOU ARE PAUSING GAME";
+				SetColor(7);
 				isPauseGame = 1;
 			}
 			else if (temp == 27) {
@@ -671,6 +692,8 @@ void NewGame(int x)
 						temp = 'W';
 					}
 					}
+					GotoXY(4, HEIGH_CONSOLE + 6);					
+					cout << "                     ";
 					isPauseGame = 0;
 				}
 				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
@@ -686,7 +709,6 @@ void NewGame(int x)
 		}
 	}
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
 
