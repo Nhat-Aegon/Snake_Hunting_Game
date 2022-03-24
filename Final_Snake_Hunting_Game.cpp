@@ -46,7 +46,6 @@ void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua 
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
 											// duoc su dung de bieu dien 1 dieu gi do
 												// GetConsoleWindow la ham tra ve 1 handle toi window phu hop voi kieu du lieu duoc goi
-
 	long style = GetWindowLong(consoleWindow, GWL_STYLE); // lay thong tin 32-bit cua 1 cua so, GWL_STYLE lay thong tin kieu cua cua so console
 	style = style & ~(WS_MAXIMIZEBOX) & ~(WS_THICKFRAME); // dieu chinh thong so cua style sao cho ngan nguoi dung phong to cua so hoac thay doi kich thuoc cua so
 	SetWindowLong(consoleWindow, GWL_STYLE, style); // thay doi thong tin cua 1 cua so, gia tri muon thay the
@@ -94,18 +93,18 @@ bool IsValid(int x, int y) {
 	}
 	return true;
 }
-void GenerateFood(){
+void GenerateFood() {
 	int x, y;
 	srand(time(NULL));
-		do {
-			x = rand() % (WIDTH_CONSOLE+4) + 1;
-			y = rand() % (HEIGH_CONSOLE+4) + 1;
-			if (x <= 4) x = 5;
-			if (x >= WIDTH_CONSOLE + 4) x = WIDTH_CONSOLE - 1;
-			if (y <= 4) y = 5;
-			if (y >= HEIGH_CONSOLE + 4) y = HEIGH_CONSOLE - 1;
-		} while (!IsValid(x, y));
-		food[++FOOD_INDEX] = { x,y };
+	do {
+		x = rand() % (WIDTH_CONSOLE + 4) + 1;
+		y = rand() % (HEIGH_CONSOLE + 4) + 1;
+		if (x <= 4) x = 5;
+		if (x >= WIDTH_CONSOLE + 4) x = WIDTH_CONSOLE - 1;
+		if (y <= 4) y = 5;
+		if (y >= HEIGH_CONSOLE + 4) y = HEIGH_CONSOLE - 1;
+	} while (!IsValid(x, y));
+	food[++FOOD_INDEX] = { x,y };
 }
 
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
@@ -118,7 +117,7 @@ void DrawBoard(int x, int y, int width, int height)
 		Sleep(5);
 		GotoXY(x + i, y);
 		cout << char(177);
-		GotoXY(x + (width-i), y + height);
+		GotoXY(x + (width - i), y + height);
 		cout << char(177);
 	}
 	// Draw 2 side walls
@@ -127,12 +126,13 @@ void DrawBoard(int x, int y, int width, int height)
 		Sleep(30);
 		GotoXY(x, y + i);
 		cout << char(177);
-		GotoXY(x + width, y + (height-i));
+		GotoXY(x + width, y + (height - i));
 		cout << char(177);
 	}
 	SetColor(7);
 	GotoXY(width + 1, height + 1);
 }
+
 
 void DrawSnakeAndFoodBefore(char* str) {
 	if (gate == false)
@@ -159,18 +159,18 @@ void DrawSnakeAndFoodAfter() {
 	GotoXY(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y);
 }
 
-void DrawNGate(int x, int y)
+void DrawNGate(int x, int y)				// Ve cong
 {
 	for (int i = x - 1; i <= x + 1; i++)
 		for (int j = y - 1; j <= y; j++)
 		{
 			GotoXY(i, j);
-			printf("X");
-		}
+			printf("¤");
+		}									// Ve 6 dau X cho tat ca 6 o
 	GotoXY(x, y);
-	printf("U");
+	printf("U");							// Ve lai o chua vi tri cong
 	GotoXY(x, y - 1);
-	printf(" ");
+	printf(" ");							// Ve lai o truoc o chua vi tri cong *Lap lai cho E, S, W
 }
 void DrawEGate(int x, int y)
 {
@@ -178,7 +178,7 @@ void DrawEGate(int x, int y)
 		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("X");
+			printf("¤");
 		}
 	GotoXY(x, y);
 	printf("C");
@@ -191,7 +191,7 @@ void DrawSGate(int x, int y)
 		for (int j = y; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("X");
+			printf("¤");
 		}
 	GotoXY(x, y);
 	printf("n");
@@ -204,7 +204,7 @@ void DrawWGate(int x, int y)
 		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("X");
+			printf("¤");
 		}
 	GotoXY(x, y);
 	printf("D");
@@ -213,20 +213,12 @@ void DrawWGate(int x, int y)
 }
 bool pass = false;
 
-void ProcessGate()
+void DrawAndAssignGate(int x0, int y0, char drt)	// Ve cong va gan vi tri cac o lien quan vao op[]
 {
-	char direction[5] = { 'N','E','S','W' };
-	int x0 = 0, y0 = 0;
-	srand(time(NULL));
-	char drt = direction[rand() % 4];
-	do
-	{
-		x0 = rand() % WIDTH_CONSOLE;
-		y0 = rand() % HEIGH_CONSOLE;
-	} while (x0<4 || x0>(WIDTH_CONSOLE - 4) || y0<4 || y0>(HEIGH_CONSOLE - 4) || IsValid(x0, y0) == false);
 	int n = 0;
 	op[4].x = x0;
-	op[4].y = y0;
+	op[4].y = y0;  // Gan dia chi cua cong cho op[4]
+	int a = 0, b = 0;
 	switch (drt)
 	{
 	case 'N':
@@ -239,9 +231,9 @@ void ProcessGate()
 					op[n].x = a;
 					op[n].y = b;
 					n++;
-				}
+				}									// Gan 4 dia chi 4 o khong duoc cham gan cong vao op[0->3]
 		op[5].x = x0;
-		op[5].y = y0 - 1;
+		op[5].y = y0 - 1;							// Gan dia chi o truoc cong vao op[5] *Lap lai cho E, S va W*
 		break;
 	}
 	case 'E':
@@ -291,35 +283,50 @@ void ProcessGate()
 	}
 	}
 }
-bool IsGateTouch(POINT snake[], OPSTACLE op[])
+
+void ProcessGate()
 {
-	if (snake[SIZE_SNAKE - 1].x == op[5].x && snake[SIZE_SNAKE - 1].y == op[5].y)
-		pass = true;
+	char direction[5] = { 'N','E','S','W' };
+	int x0 = 0, y0 = 0;
+	srand(time(NULL));
+	char drt = direction[rand() % 4];			// Chon ra chieu ngau nhien
+	do
+	{
+		x0 = rand() % WIDTH_CONSOLE;
+		y0 = rand() % HEIGH_CONSOLE;
+	} while (x0<6 || x0>(WIDTH_CONSOLE - 6) || y0<6 || y0>(HEIGH_CONSOLE - 6) || IsValid(x0, y0) == false); // Chon vi tri cong ngau nhien
+	DrawAndAssignGate(x0, y0, drt); // Ve cong va gan cac gia tri vi tri lien quan
+}
+bool IsGateTouch(POINT snake[], OPSTACLE op[])	// Kiem tra cham cong
+{
+	if (snake[SIZE_SNAKE - 1].x == op[5].x && snake[SIZE_SNAKE - 1].y == op[5].y) // Ran di qua o truoc cong
+		pass = true;															  // Cho phep ran di qua cong
 	for (int i = 0; i < 4; i++)
-		if (snake[SIZE_SNAKE - 1].x == op[i].x && snake[SIZE_SNAKE - 1].y == op[i].y)
+		if (snake[SIZE_SNAKE - 1].x == op[i].x && snake[SIZE_SNAKE - 1].y == op[i].y)	// Ran cham vao cac o gan cong => true
 			return true;
-	if (snake[SIZE_SNAKE - 1].x == op[4].x && snake[SIZE_SNAKE - 1].y == op[4].y && pass == false)
+	if (snake[SIZE_SNAKE - 1].x == op[4].x && snake[SIZE_SNAKE - 1].y == op[4].y)
+		if (pass == false)	// Ran cham vao o cong nhung chua qua duoc o truoc cong => true
 		return true;
+	else
+	{
+		SIZE_SNAKE--;
+	}
 	return false;
 }
-void DrawGate()
-{
-	// Tong hop tu cac ham tren
-}
+
 
 void DrawScoreAndLevel()
 {
 	// Ham nay di chung voi calculate score
 }
-
 void GameGuide()
 {
 	SetColor(13);
 	for (int i = 0; i < 36; i++)
 	{
-		GotoXY(83+i, 11);
+		GotoXY(83 + i, 11);
 		cout << char(223);
-		GotoXY(83+i, 16);
+		GotoXY(83 + i, 16);
 		cout << char(223);
 	}
 	cout << endl;
@@ -346,6 +353,7 @@ void ProcessDead()
 	printf("DEAD!!! Type Y to play again or anykey to exit");
 	SetColor(7);
 }
+
 void ExitGame(HANDLE t) {
 	system("cls");
 	int temp = TerminateThread(t, 0);
@@ -412,8 +420,8 @@ void save_game()
 	f.close();
 	if (!f)
 		cout << "Can't save your file, please try another options!";
-	delete filePath;
-	delete name;
+	delete[]filePath;
+	delete[]name;
 }
 
 /////////////////////////////////////////////////////////////////////////			  Header 3: Snake Components/////////////////////////////////////////
@@ -421,7 +429,7 @@ void Eat() {
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
 	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
 	printf(" ");
-	if (FOOD_INDEX == MAX_SIZE_FOOD - 1)
+	if (FOOD_INDEX == MAX_SIZE_FOOD - 7)
 	{
 		gate = true;
 		ProcessGate();
@@ -434,6 +442,7 @@ void Eat() {
 	else {
 		GenerateFood();
 		SIZE_SNAKE++;
+
 	}
 } //khi ran an moi thi do dai ran tang va vi tri moi duoc thay doi de tranh viec vi tri moi xuat hien tai vi tri con ran
 bool IsTouchBody()
@@ -449,14 +458,17 @@ bool IsTouchBody()
 }
 bool IsTouchwall(int x_head_position, int y_head_position)
 {
-	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= WIDTH_CONSOLE+4 || y_head_position >= HEIGH_CONSOLE+4)
+	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= WIDTH_CONSOLE + 5 || y_head_position >= HEIGH_CONSOLE + 4)
 		return true;
 	return false;
 }
 void MoveRight()
 {
 	if (IsTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y))
+	{
 		ProcessDead();
+		return;
+	}
 	if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
 		Eat();
@@ -470,8 +482,11 @@ void MoveRight()
 }
 void MoveLeft()
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x - 1, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	{
 		ProcessDead();
+		return;
+	}
 	if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
 		Eat();
@@ -486,9 +501,11 @@ void MoveLeft()
 }
 void MoveDown()
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y + 1))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	{
 		ProcessDead();
-
+		return;
+	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
 	{
 		Eat();
@@ -503,8 +520,11 @@ void MoveDown()
 }
 void MoveUp()
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y - 1))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	{
 		ProcessDead();
+		return;
+	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
 	{
 		Eat();
@@ -521,6 +541,9 @@ void ResetData() {
 	//Initialize the global values
 	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 75,
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
+	gate = false;
+	for (int i = 0; i < 6; i++)
+		op[i] = { 0 };
 	// Initialize default values for snake
 	snake[0] = { 10, 5 }; snake[1] = { 11, 5 }; // khoi tao giao tri cho ran
 	GenerateFood();
@@ -530,6 +553,7 @@ void ResetData() {
 		snake[6 - i - 1].y = 7;
 	}
 }
+
 void ResetDataLoadGame()
 {
 	//Initialize the global values
@@ -584,8 +608,11 @@ void ResetDataLoadGame()
 /////////////////////////////////////////////////////////////////////////				Header 5: Play Game								/////////////////////////////////////////
 void ThreadFunc() {
 	while (true) {
-		if (IsGateTouch(snake, op) || IsTouchBody())
+		if (IsTouchBody())
 			ProcessDead();
+		if (gate == true)
+			if (IsGateTouch(snake, op))
+				ProcessDead();
 		if (STATE == 1) {//If my snake is alive
 			char* c = new char[2];
 			strcpy(c, " ");
@@ -622,6 +649,7 @@ void StartGame(int x) {
 	GameGuide();
 	STATE = 1;//Start running Thread    
 }
+
 void NewGame(int x)
 {
 	StartGame(x);
@@ -692,7 +720,7 @@ void NewGame(int x)
 						temp = 'W';
 					}
 					}
-					GotoXY(4, HEIGH_CONSOLE + 6);					
+					GotoXY(4, HEIGH_CONSOLE + 6);
 					cout << "                     ";
 					isPauseGame = 0;
 				}
@@ -710,8 +738,8 @@ void NewGame(int x)
 	}
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
+
 int LoadingAnimation() {
 	system("cls");
 	int i = 7;
@@ -749,6 +777,7 @@ int LoadingAnimation() {
 	}
 	return 0;
 }
+
 void MainMenu() //xay dung menu // ten cu~: main_menu
 {
 	int i = 1;
@@ -853,7 +882,3 @@ int main()
 	MainMenu();
 	return 0;
 }
-
-
-
-
