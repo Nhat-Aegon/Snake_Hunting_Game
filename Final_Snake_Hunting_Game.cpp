@@ -571,7 +571,7 @@ void ResetDataLoadGame()
 		name[len] = c;
 		len++;
 	}
-	name[len] = '/0';
+	name[len] = '\0';
 	GotoXY(55, 10);
 
 	cout << "Welcome back " << name;
@@ -686,7 +686,7 @@ void NewGame(int x)
 				PauseGame(handle_t1);
 				SetColor(12);
 				GotoXY(4, HEIGH_CONSOLE + 6);
-				cout << "YOU ARE PAUSING GAME";
+				cout << "YOU ARE PAUSING GAME!! Press SPACE or W,A,D,S to continue playing";
 				SetColor(7);
 				isPauseGame = 1;
 			}
@@ -773,7 +773,7 @@ int LoadingAnimation() {
 		if (x == 90) {
 			break;
 		}
-		Sleep(70);
+		Sleep(60);
 	}
 	return 0;
 }
