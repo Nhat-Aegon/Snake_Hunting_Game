@@ -28,6 +28,9 @@ int STATE; // State of snake: dead or alive
 int load_Index = 0;
 int count_savegame = 0;
 bool gate = false;
+int SCORE;
+int LEVELS = 1;
+
 
 ///////////////////////////////////////////////////////////////////////////////Header 0: Useful Function	///////////////////////////////////////////////////////////////////////////////
 struct OPSTACLE
@@ -315,28 +318,60 @@ bool IsGateTouch(POINT snake[], OPSTACLE op[])	// Kiem tra cham cong
 }
 
 
-void DrawScoreAndLevel()
+void ScoreAndLevels() //ham su dung de tinh diem va level khi ran an
 {
-	// Ham nay di chung voi calculate score
+	for (int i = 0; i < SIZE_SNAKE; i++)
+		SCORE += SIZE_SNAKE;
 }
 void GameGuide()
 {
+	ScoreAndLevels();
 	SetColor(13);
 	for (int i = 0; i < 36; i++)
 	{
+		GotoXY(83 + i, 5);
+		cout << char(223);
 		GotoXY(83 + i, 11);
 		cout << char(223);
-		GotoXY(83 + i, 16);
+		GotoXY(83 + i, 17);
+		cout << char(223);
+		GotoXY(83 + i, 24);
 		cout << char(223);
 	}
 	cout << endl;
+	for (int i = 0; i < 19; i++)
+	{
+		GotoXY(83, 5+i);
+		cout << char(222);
+	}
+	cout << endl;
 	SetColor(7);
+	GotoXY(84, 4);
+	cout << "+ + THE HUNTING SNAKE + +" << endl;
+	GotoXY(84, 6);
+	cout << "LEVELS: " << LEVELS << endl;
+	GotoXY(84, 7);
+	cout << "SCORE: " << SCORE << endl;
 	GotoXY(84, 12);
 	cout << "Press SPACE to pause/continue game" << endl;
 	GotoXY(84, 13);
 	cout << "Press 'ESC' to exit game" << endl;
 	GotoXY(84, 14);
 	cout << "Press 'P' to save game " << endl;
+	GotoXY(84, 15);
+	cout << "Use 'W,A,S,D' key to move" << endl;
+	GotoXY(84, 18);
+	cout << "Do an ky thuat lap trinh" << endl;
+	GotoXY(84, 19);
+	cout << "Cac thanh vien Nhom 4:  " << endl;
+	GotoXY(84, 20);
+	cout << "Bui Minh Nhat" << endl;
+	GotoXY(84, 21);
+	cout << "Tran Ha Minh Nhat" << endl;
+	GotoXY(84, 22);
+	cout << "Nguyen Vu Minh Khoi" << endl;
+	GotoXY(84, 23);
+	cout << "Tran Dinh Trung" << endl;
 	//cout << R"(
 	//	       Press SPACE to pause/continue game
 	//		   Press 'ESC' to exit game  
