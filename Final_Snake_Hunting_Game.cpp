@@ -317,11 +317,23 @@ bool IsGateTouch(POINT snake[], OPSTACLE op[])	// Kiem tra cham cong
 	return false;
 }
 
-
-void ScoreAndLevels() //ham su dung de tinh diem va level khi ran an
+void DrawScoreAndLevels() // ve ra bang score ban dau
 {
-	for (int i = 0; i < SIZE_SNAKE; i++)
-		SCORE += SIZE_SNAKE;
+	SetColor(7);
+	GotoXY(84, 6);
+	cout << "LEVELS: 1 " << endl;
+	GotoXY(84, 7);
+	cout << "SCORE: 0 " << endl;
+}
+
+void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
+{
+	SCORE++;
+	SetColor(7);
+	GotoXY(84, 6);
+	cout << "LEVELS: " << LEVELS << endl;
+	GotoXY(84, 7);
+	cout << "SCORE: " << SCORE << endl;
 }
 void GameGuide()
 {
@@ -348,10 +360,6 @@ void GameGuide()
 	SetColor(7);
 	GotoXY(84, 4);
 	cout << "+ + THE HUNTING SNAKE + +" << endl;
-	GotoXY(84, 6);
-	cout << "LEVELS: " << LEVELS << endl;
-	GotoXY(84, 7);
-	cout << "SCORE: " << SCORE << endl;
 	GotoXY(84, 12);
 	cout << "Press SPACE to pause/continue game" << endl;
 	GotoXY(84, 13);
@@ -461,6 +469,7 @@ void save_game()
 
 /////////////////////////////////////////////////////////////////////////			  Header 3: Snake Components/////////////////////////////////////////
 void Eat() {
+	ScoreAndLevels();
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
 	GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
 	printf(" ");
@@ -682,6 +691,7 @@ void StartGame(int x) {
 	system("cls");
 	DrawBoard(4, 4, WIDTH_CONSOLE, HEIGH_CONSOLE); // Draw game
 	GameGuide();
+	DrawScoreAndLevels();
 	STATE = 1;//Start running Thread    
 }
 
