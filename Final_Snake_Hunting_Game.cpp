@@ -177,12 +177,12 @@ void DrawNGate(int x, int y)				// Ve cong
 		for (int j = y - 1; j <= y; j++)
 		{
 			GotoXY(i, j);
-			printf("¤");
+			cout << char(219);
 		}									// Ve 6 dau X cho tat ca 6 o
 	GotoXY(x, y);
-	printf("U");							// Ve lai o chua vi tri cong
+	cout << char(220);							// Ve lai o chua vi tri cong
 	GotoXY(x, y - 1);
-	printf(" ");							// Ve lai o truoc o chua vi tri cong *Lap lai cho E, S, W
+	cout << ' ';							// Ve lai o truoc o chua vi tri cong *Lap lai cho E, S, W
 }
 void DrawEGate(int x, int y)
 {
@@ -190,12 +190,12 @@ void DrawEGate(int x, int y)
 		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("¤");
+			cout << char(219);
 		}
 	GotoXY(x, y);
-	printf("C");
+	cout << char(219);
 	GotoXY(x + 1, y);
-	printf(" ");
+	cout << ' ';
 }
 void DrawSGate(int x, int y)
 {
@@ -203,12 +203,12 @@ void DrawSGate(int x, int y)
 		for (int j = y; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("¤");
+			cout << char(219);
 		}
 	GotoXY(x, y);
-	printf("n");
+	cout << char(219);
 	GotoXY(x, y + 1);
-	printf(" ");
+	cout << ' ';
 }
 void DrawWGate(int x, int y)
 {
@@ -216,12 +216,12 @@ void DrawWGate(int x, int y)
 		for (int j = y - 1; j <= y + 1; j++)
 		{
 			GotoXY(i, j);
-			printf("¤");
+			cout << char(22);
 		}
 	GotoXY(x, y);
-	printf("D");
+	cout << char(221);
 	GotoXY(x - 1, y);
-	printf(" ");
+	cout << ' ';
 }
 bool pass = false;
 
@@ -311,32 +311,12 @@ void ProcessGate(GATE*& gate)
 }
 
 /////////////////////////////////////////////////////////////////////////				Header 4: Animations				/////////////////////////////////////////
-void BlinkSnake() //hieu ung nhap nhay con ran
-{
-	for (int j = 0; j < 5; j++)
-	{
-		Sleep(200);
-		for (int i = 0; i < SIZE_SNAKE; i++)
-		{
-			GotoXY(snake[i].x, snake[i].y);
-			cout << ID[i];
-		}
-		Sleep(100);
-		for (int i = 0; i < SIZE_SNAKE; i++)
-		{
-			GotoXY(snake[i].x, snake[i].y);
-			cout << " ";
-		}
-	}
-}
 
 void TransitionNewMap(POINT snake[], GATE*& gate)
 {
-	bool swtch = false;
 	SIZE_SNAKE--;
 	if (SIZE_SNAKE == 0)
 	{
-		swtch = true;
 		/////////// xoa cong ////////////
 		for (int i = 0; i < 6; i++)
 		{
@@ -371,21 +351,21 @@ void TransitionNewMap(POINT snake[], GATE*& gate)
 			if (SIZE_SNAKE != 1)
 			{
 				snake[SIZE_SNAKE - 1].y = 14;
-				snake[SIZE_SNAKE - 1].x = snake[SIZE_SNAKE - 2].x;
+				snake[SIZE_SNAKE - 1].x = snake[SIZE_SNAKE - 2].x;	
 				for (int i = 0; i < SIZE_SNAKE - 1; i++)
 				{
 					snake[i].x = snake[i + 1].x;
 					snake[i].y = snake[i + 1].y;
 				}
 			}
+			Sleep(20);
 			for (int i = SIZE_SNAKE-1; i >= 0; i--)
 			{
 				GotoXY(snake[i].x, snake[i].y);
 				cout << ID[SIZE_SNAKE - i - 1];
-			}
+			}				
 		}
 		gate->isGate = false;
-		//////// xoa cong /////////
 	}
 }
 
@@ -395,6 +375,16 @@ int IsGateTouch(POINT snake[], GATE*& gate)	// Kiem tra cham cong( 0: khong cham
 	if (snake[SIZE_SNAKE - 1].x == gate->g[5].x && snake[SIZE_SNAKE - 1].y == gate->g[5].y) // Ran di qua o truoc cong
 	{
 		TransitionNewMap(snake, gate);
+		if (SIZE_SNAKE == 7)
+		{
+			for (int i = 78 - 1; i <= 78; i++)
+				for (int j = 14 - 1; j <= 14 + 1; j++)
+				{
+					GotoXY(i, j);
+					printf(" ");
+					Sleep(300);
+				}
+		}
 		return 2;
 	}
 		for (int temp1 = 0; temp1 < 6; temp1++)
@@ -407,17 +397,29 @@ int IsGateTouch(POINT snake[], GATE*& gate)	// Kiem tra cham cong( 0: khong cham
 		}
 	if (flag == 0)
 		return 0;
+
+
 	return 1;
 }
-
-void DrawScoreAndLevels() // ve ra bang score ban dau
+void BlinkSnake() //hieu ung nhap nhay con ran
 {
-	SetColor(7);
-	GotoXY(92, 6);
-	cout << "LEVELS: 1 " << endl;
-	GotoXY(92, 7);
-	cout << "SCORE: 0 " << endl;
+	for (int j = 0; j < 5; j++)
+	{
+		Sleep(200);
+		for (int i = 0; i < SIZE_SNAKE; i++)
+		{
+			GotoXY(snake[i].x, snake[i].y);
+			cout << ID[i];
+		}
+		Sleep(100);
+		for (int i = 0; i < SIZE_SNAKE; i++)
+		{
+			GotoXY(snake[i].x, snake[i].y);
+			cout << " ";
+		}
+	}
 }
+
 
 
 void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
