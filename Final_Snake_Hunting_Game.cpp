@@ -500,6 +500,7 @@ void ProcessDead()
 	STATE = 0;
 	GotoXY(3, HEIGH_CONSOLE + 7);
 	SetColor(12);
+	PlaySound(TEXT("die-long.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	printf("DEAD!!! Type Y to play again or anykey to exit");
 	SetColor(7);
 }
@@ -596,7 +597,7 @@ void Eat(GATE*& gate) {
 		else {
 			GenerateFood();
 			SIZE_SNAKE++;
-
+			PlaySound(TEXT("Chomp.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		}
 	}
 } //khi ran an moi thi do dai ran tang va vi tri moi duoc thay doi de tranh viec vi tri moi xuat hien tai vi tri con ran
@@ -1005,12 +1006,14 @@ void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
 			{
 			case 1:
 			{
+				PlaySound(TEXT("start2.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
 				NewGame(1, gate);
 				return;
 			}
 			case 4:
 			{
+				PlaySound(TEXT("start2.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
 				NewGame(2, gate);
 				return;
