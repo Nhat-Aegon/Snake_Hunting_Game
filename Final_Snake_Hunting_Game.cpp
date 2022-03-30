@@ -1016,14 +1016,14 @@ void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
 			{
 			case 1:
 			{
-				PlaySound(TEXT("start2.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
 				NewGame(1, gate);
 				return;
 			}
 			case 4:
 			{
-				PlaySound(TEXT("start2.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
 				NewGame(2, gate);
 				return;
