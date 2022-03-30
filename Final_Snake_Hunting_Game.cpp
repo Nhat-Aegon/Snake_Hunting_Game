@@ -311,6 +311,24 @@ void ProcessGate(GATE*& gate)
 }
 
 /////////////////////////////////////////////////////////////////////////				Header 4: Animations				/////////////////////////////////////////
+void BlinkSnake() //hieu ung nhap nhay con ran
+{
+	for (int j = 0; j < 5; j++)
+	{
+		Sleep(200);
+		for (int i = 0; i < SIZE_SNAKE; i++)
+		{
+			GotoXY(snake[i].x, snake[i].y);
+			cout << ID[i];
+		}
+		Sleep(100);
+		for (int i = 0; i < SIZE_SNAKE; i++)
+		{
+			GotoXY(snake[i].x, snake[i].y);
+			cout << " ";
+		}
+	}
+}
 
 void TransitionNewMap(POINT snake[], GATE*& gate)
 {
@@ -395,66 +413,80 @@ int IsGateTouch(POINT snake[], GATE*& gate)	// Kiem tra cham cong( 0: khong cham
 void DrawScoreAndLevels() // ve ra bang score ban dau
 {
 	SetColor(7);
-	GotoXY(84, 6);
+	GotoXY(92, 6);
 	cout << "LEVELS: 1 " << endl;
-	GotoXY(84, 7);
+	GotoXY(92, 7);
 	cout << "SCORE: 0 " << endl;
 }
 
+
 void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
 {
-	SCORE++;
+	SCORE+=100;
 	SetColor(7);
-	GotoXY(84, 6);
+	GotoXY(92, 6);
 	cout << "LEVELS: " << LEVELS << endl;
-	GotoXY(84, 7);
+	GotoXY(92, 7);
 	cout << "SCORE: " << SCORE << endl;
+	if (SCORE == 500)
+		LEVELS++;
 }
+
 void GameGuide()
 {
-	ScoreAndLevels();
 	SetColor(13);
-	for (int i = 0; i < 36; i++)
+	for (int i = 0; i < 38; i++)
 	{
-		GotoXY(83 + i, 5);
+		GotoXY(82 + i, 5);
 		cout << char(223);
-		GotoXY(83 + i, 11);
+		GotoXY(82 + i, 11);
 		cout << char(223);
-		GotoXY(83 + i, 17);
+		GotoXY(82 + i, 17);
 		cout << char(223);
-		GotoXY(83 + i, 24);
+		GotoXY(82 + i, 24);
 		cout << char(223);
+		GotoXY(82 + i, 20);
+		cout << char(220);
+		GotoXY(82 + i, 24);
+		cout << char(220);
 	}
 	cout << endl;
-	for (int i = 0; i < 19; i++)
+	for (int i = 0; i < 20; i++)
 	{
-		GotoXY(83, 5 + i);
+		GotoXY(81, 5+i);
+		cout << char(222);
+		GotoXY(121, 6 + i);
 		cout << char(222);
 	}
 	cout << endl;
 	SetColor(7);
-	GotoXY(84, 4);
-	cout << "+ + THE HUNTING SNAKE + +" << endl;
+	GotoXY(85, 4);
+	cout << "+ + + + THE GAME GUIDE + + + +" << endl;
 	GotoXY(84, 12);
-	cout << "Press SPACE to pause/continue game" << endl;
+	cout << " 'SPACE': Pause/continue game" << endl;
 	GotoXY(84, 13);
-	cout << "Press 'ESC' to exit game" << endl;
+	cout << " 'ESC'  : Exit game" << endl;
 	GotoXY(84, 14);
-	cout << "Press 'P' to save game " << endl;
+	cout << " 'P'    : Save game " << endl;
 	GotoXY(84, 15);
-	cout << "Use 'W,A,S,D' key to move" << endl;
-	GotoXY(84, 18);
-	cout << "Do an ky thuat lap trinh" << endl;
-	GotoXY(84, 19);
-	cout << "Cac thanh vien Nhom 4:  " << endl;
-	GotoXY(84, 20);
-	cout << "Bui Minh Nhat" << endl;
-	GotoXY(84, 21);
-	cout << "Tran Ha Minh Nhat" << endl;
-	GotoXY(84, 22);
-	cout << "Nguyen Vu Minh Khoi" << endl;
-	GotoXY(84, 23);
-	cout << "Tran Dinh Trung" << endl;
+	cout << "  Use 'W,A,S,D' key to move" << endl;
+	GotoXY(86, 18);
+	cout << R"( ____  _      ____  _  __ _____ )";
+	cout << endl;
+	GotoXY(86, 19);
+	cout << R"(/ ___\/ \  /|/  _ \/ |/ //  __/ )";
+	cout << endl;
+	GotoXY(86, 20);
+	cout << R"(|    \| |\ ||| / \||   / |  \ )";
+	cout << endl;
+	GotoXY(86, 21);
+	cout << R"(\___ || | \||| |-|||   \ |  /_ )";
+	cout << endl;
+	GotoXY(86, 22);
+	cout << R"(\____/\_/  \|\_/ \|\_|\_\\____\ )";
+	cout << endl;
+
+
 	//cout << R"(
 	//	       Press SPACE to pause/continue game
 	//		   Press 'ESC' to exit game  
