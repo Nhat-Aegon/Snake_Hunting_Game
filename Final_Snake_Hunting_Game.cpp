@@ -420,6 +420,14 @@ void BlinkSnake() //hieu ung nhap nhay con ran
 	}
 }
 
+void DrawScoreAndLevels() // ve ra bang score ban dau
+{
+	SetColor(7);
+	GotoXY(92, 6);
+	cout << "LEVELS: 1 " << endl;
+	GotoXY(92, 7);
+	cout << "SCORE: 0 " << endl;
+}
 
 
 void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
