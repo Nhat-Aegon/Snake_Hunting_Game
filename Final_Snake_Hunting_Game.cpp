@@ -486,7 +486,7 @@ void Eat() {
 	else {
 		GenerateFood();
 		SIZE_SNAKE++;
-
+		PlaySound(TEXT("Chomp.wav"), NULL, SND_FILENAME| SND_ASYNC);
 	}
 } //khi ran an moi thi do dai ran tang va vi tri moi duoc thay doi de tranh viec vi tri moi xuat hien tai vi tri con ran
 bool IsTouchBody()
@@ -927,3 +927,7 @@ int main()
 	MainMenu();
 	return 0;
 }
+
+/*
+	chuột phải solution, chọn properties, vào phần Linker, chọn Input, ở Additional Dependencies, chọn edit bên phải thêm thư viện Winmm.lib
+*/
