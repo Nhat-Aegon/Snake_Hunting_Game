@@ -766,7 +766,7 @@ void NewGame(int x)
 					}
 					}
 					GotoXY(4, HEIGH_CONSOLE + 6);
-					cout << "                     ";
+					cout << "                                                                              ";
 					isPauseGame = 0;
 				}
 				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
