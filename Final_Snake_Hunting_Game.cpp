@@ -891,7 +891,7 @@ void NewGame(int x, GATE*& gate)
 					}
 					}
 					GotoXY(4, HEIGH_CONSOLE + 6);
-					cout << "                     ";
+					cout << "                                                        ";
 					isPauseGame = 0;
 				}
 				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
