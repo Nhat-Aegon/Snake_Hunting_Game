@@ -823,8 +823,7 @@ void StartGame(int x, GATE*& gate) {
 void NewGame(int x, GATE*& gate)
 {
 	StartGame(x,gate);
-	thread t1(ThreadFunc, std::ref(gate)); //Create thread for snake
-	t1.detach();
+	std::thread t1(ThreadFunc, std::ref(gate)); //Create thread for snake
 	HANDLE handle_t1 = t1.native_handle(); //Take handle of thread
 	int isPauseGame = 0;
 	while (true) {
