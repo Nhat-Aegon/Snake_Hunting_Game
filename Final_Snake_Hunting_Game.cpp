@@ -865,7 +865,6 @@ void NewGame(int x, GATE*& gate)
 				return; // int main**
 			}
 			else {
-				//ResumeThread(handle_t1); //neu de day thi khong the bam pause duoc
 				if (temp == ' ' && isPauseGame)
 				{
 					switch (CHAR_LOCK)
