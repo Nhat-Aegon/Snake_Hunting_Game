@@ -37,25 +37,75 @@ int LEVELS = 1;
 
 struct GATE
 {
-POINT g[6] = { 0 };
-bool isGate = false;
-int countGate = 1;
+	POINT g[6] = { 0 };
+	bool isGate = false;
+	int countGate = 1;
 };
 
 vector<POINT> obstacle;
 
-void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
-COORD coord; // bien luu toa do trong cua so console, toa do (0,0) nam tren cung ben trai
-coord.X = x;
-coord.Y = y;
-SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
+
+void GotoXY(int x, int y);
+void FixConsoleWindow();
+void ShowCur(bool CursorVisibility);
+void SetColor(int color);
+void TextBackGround(WORD color);
+bool IsValid(int x, int y, vector<POINT> obstacle);
+void GenerateFood(vector<POINT>& obstacle);
+void DrawBoard(int x, int y, int width, int height);
+void DrawSnakeAndFoodBefore(char* str, GATE*& gate);
+void DrawSnakeAndFoodAfter(GATE*& gate);
+void DrawNGate(int x, int y);
+void DrawEGate(int x, int y);
+void DrawSGate(int x, int y);
+void DrawWGate(int x, int y);
+void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate);
+void ProcessGate(GATE*& gate, vector<POINT> obstacle);
+void CreateMap(vector<POINT>& obstacle, int countGate);
+void TransitionNewMap(POINT snake[], GATE*& gate, vector<POINT>& obstacle);
+int IsGateTouch(POINT snake[], GATE*& gate, vector<POINT>& obstacle);
+void BlinkSnake();
+void DrawScoreAndLevels();
+void ScoreAndLevels();
+void ProcessDead();
+void PauseGame(HANDLE t);
+//void ExitGame(HANDLE t);
+void ExitGame(HANDLE t, GATE*& gate);
+void save_game();
+void Eat(GATE*& gate, vector<POINT> obstacle);
+bool IsTouchBody();
+bool IsTouchwall(int x_head_position, int y_head_position, vector<POINT>& obstacle);
+void MoveRight(GATE*& gate, vector<POINT> obstacle);
+void MoveLeft(GATE*& gate, vector<POINT> obstacle);
+void MoveDown(GATE*& gate, vector<POINT> obstacle);
+void MoveUp(GATE*& gate, vector<POINT> obstacle);
+void ResetData(GATE*& gate, vector<POINT>& obstacle);
+void ResetDataLoadGame(vector<POINT>& obstacle);
+void ThreadFunc(GATE*& gate, vector<POINT>& obstacle);
+void StartGame(int x, GATE*& gate, vector<POINT>& obstacle);
+void NewGame(int x, GATE*& gate, vector<POINT>& obstacle);
+int LoadingAnimation();
+void MainMenu(GATE*& gate, vector<POINT>& obstacle);
+
+/////////////////////////////////////////////////////////////////////////				int main()				/////////////////////////////////////////
+int main()
+{
+
+	GATE* gate = new GATE();
+	ShowCur(0);
+	FixConsoleWindow();
+	MainMenu(gate, obstacle);
+	delete gate;
+	return 0;
 }
 
 
-
-
-
-
+void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
+	COORD coord; // bien luu toa do trong cua so console, toa do (0,0) nam tren cung ben trai
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
+}
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
 											// duoc su dung de bieu dien 1 dieu gi do
@@ -126,7 +176,7 @@ void GenerateFood(vector<POINT>& obstacle) {
 		if (x >= WIDTH_CONSOLE + 4) x = WIDTH_CONSOLE - 1;
 		if (y <= 4) y = 5;
 		if (y >= HEIGH_CONSOLE + 4) y = HEIGH_CONSOLE - 1;
-	} while (!IsValid(x, y,obstacle));
+	} while (!IsValid(x, y, obstacle));
 	food[++FOOD_INDEX] = { x,y };
 }
 
@@ -158,7 +208,7 @@ void DrawBoard(int x, int y, int width, int height)
 }
 
 
-void DrawSnakeAndFoodBefore(char* str, GATE * &gate) {
+void DrawSnakeAndFoodBefore(char* str, GATE*& gate) {
 
 	if (gate->isGate == false)
 	{
@@ -171,7 +221,7 @@ void DrawSnakeAndFoodBefore(char* str, GATE * &gate) {
 		cout << ' ';
 	}
 }
-void DrawSnakeAndFoodAfter(GATE * &gate) {
+void DrawSnakeAndFoodAfter(GATE*& gate) {
 	if (gate->isGate == false)
 	{
 		GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
@@ -238,7 +288,7 @@ void DrawWGate(int x, int y)
 }
 bool pass = false;
 
-void DrawAndAssignGate(int x0, int y0, char drt, GATE * &gate)	// Ve cong va gan vi tri cac o lien quan vao op[]
+void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan vi tri cac o lien quan vao op[]
 {
 	int n = 0;
 	gate->g[4].x = x0;
@@ -309,7 +359,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE * &gate)	// Ve cong va gan
 	}
 }
 
-void ProcessGate(GATE * &gate, vector<POINT> obstacle)
+void ProcessGate(GATE*& gate, vector<POINT> obstacle)
 {
 	char direction[5] = { 'N','E','S','W' };
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
@@ -346,7 +396,7 @@ void ProcessGate(GATE * &gate, vector<POINT> obstacle)
 			break;
 		}
 		}
-	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0, obstacle) == false|| IsValid(x1,y1,obstacle)==false); // Chon vi tri cong ngau nhien
+	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0, obstacle) == false || IsValid(x1, y1, obstacle) == false); // Chon vi tri cong ngau nhien
 	DrawAndAssignGate(x0, y0, drt, gate); // Ve cong va gan cac gia tri vi tri lien quan
 }
 
@@ -465,7 +515,7 @@ void CreateMap(vector<POINT>& obstacle, int countGate)
 
 /////////////////////////////////////////////////////////////////////////				Header 4: Animations				/////////////////////////////////////////
 
-void TransitionNewMap(POINT snake[], GATE * &gate, vector<POINT>& obstacle)
+void TransitionNewMap(POINT snake[], GATE*& gate, vector<POINT>& obstacle)
 {
 	SIZE_SNAKE--;
 	if (SIZE_SNAKE == 0)
@@ -493,7 +543,7 @@ void TransitionNewMap(POINT snake[], GATE * &gate, vector<POINT>& obstacle)
 		SIZE_SNAKE = 0;
 		MOVING = 'A';
 		CHAR_LOCK = 'D';
-		while (SIZE_SNAKE < 6+(gate->countGate-1)*3)
+		while (SIZE_SNAKE < 6 + (gate->countGate - 1) * 3)
 		{
 			for (int i = 0; i < SIZE_SNAKE; i++)
 			{
@@ -521,16 +571,16 @@ void TransitionNewMap(POINT snake[], GATE * &gate, vector<POINT>& obstacle)
 		gate->isGate = false;
 	}
 	if (gate->isGate == false)
-	CreateMap(obstacle, gate->countGate);
+		CreateMap(obstacle, gate->countGate);
 }
 
-int IsGateTouch(POINT snake[], GATE * &gate, vector<POINT>& obstacle)	// Kiem tra cham cong( 0: khong cham tuong, 1:cham tuong -> chet, 2:cham tuong -> qua man
+int IsGateTouch(POINT snake[], GATE*& gate, vector<POINT>& obstacle)	// Kiem tra cham cong( 0: khong cham tuong, 1:cham tuong -> chet, 2:cham tuong -> qua man
 {
 	int flag = 0;
 	if (snake[SIZE_SNAKE - 1].x == gate->g[5].x && snake[SIZE_SNAKE - 1].y == gate->g[5].y) // Ran di qua o truoc cong
 	{
-		TransitionNewMap(snake, gate,obstacle);
-		if (SIZE_SNAKE == 6+(gate->countGate-1)*3)
+		TransitionNewMap(snake, gate, obstacle);
+		if (SIZE_SNAKE == 6 + (gate->countGate - 1) * 3)
 		{
 			for (int i = 78 - 1; i <= 78; i++)
 				for (int j = 14 - 1; j <= 14 + 1; j++)
@@ -670,18 +720,35 @@ void ProcessDead()
 	SetColor(7);
 }
 
-void PauseGame(HANDLE t) 
+void PauseGame(HANDLE t)
 {
 	SuspendThread(t);
 }
 
-void ExitGame(HANDLE t) {
+void ExitGame(HANDLE t, GATE*& gate) {
+	int key = 0;
 	PauseGame(t);
 	system("cls");
 	int temp = TerminateThread(t, 0);
-	GotoXY(53, 6);
+	GotoXY(34, 4);
 	cout << "THANKS FOR PLAYING";
-	exit(0);
+	GotoXY(34, 7);
+	cout << "Press M to go back to Main Menu";
+	if (!STATE)
+	{
+		key = _getch();
+		if (key >= 'a' && key <= 'z')
+			key -= 32;
+		if (key == 'M') //StartGame(1, gate);
+		{
+			MainMenu(gate, obstacle);
+		}
+		else
+		{
+			//ExitGame(handle_t1, gate); // int main thi return 0
+			exit(0);
+		}
+	}
 }
 
 void save_game()
@@ -745,7 +812,7 @@ void save_game()
 }
 
 /////////////////////////////////////////////////////////////////////////			  Header 3: Snake Components/////////////////////////////////////////
-void Eat(GATE * &gate, vector<POINT> obstacle) {
+void Eat(GATE*& gate, vector<POINT> obstacle) {
 
 	ScoreAndLevels();
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
@@ -757,7 +824,7 @@ void Eat(GATE * &gate, vector<POINT> obstacle) {
 		{
 			gate->isGate = true;
 			gate->countGate++;
-			ProcessGate(gate,obstacle);
+			ProcessGate(gate, obstacle);
 
 			if (SPEED == MAX_SPEED)
 				SPEED = 1;
@@ -792,7 +859,7 @@ bool IsTouchwall(int x_head_position, int y_head_position, vector<POINT>& obstac
 	}
 	return false;
 }
-void MoveRight(GATE * &gate, vector<POINT> obstacle)
+void MoveRight(GATE*& gate, vector<POINT> obstacle)
 {
 	if (IsTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y, obstacle))
 	{
@@ -801,7 +868,7 @@ void MoveRight(GATE * &gate, vector<POINT> obstacle)
 	}
 	if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
-		Eat(gate,obstacle);
+		Eat(gate, obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -810,16 +877,16 @@ void MoveRight(GATE * &gate, vector<POINT> obstacle)
 	}
 	snake[SIZE_SNAKE - 1].x++;
 }
-void MoveLeft(GATE * &gate, vector<POINT> obstacle)
+void MoveLeft(GATE*& gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y, obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
-		Eat(gate,obstacle);
+		Eat(gate, obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -829,16 +896,16 @@ void MoveLeft(GATE * &gate, vector<POINT> obstacle)
 	}
 	snake[SIZE_SNAKE - 1].x--;
 }
-void MoveDown(GATE * &gate, vector<POINT> obstacle)
+void MoveDown(GATE*& gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y, obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
 	{
-		Eat(gate,obstacle);
+		Eat(gate, obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -848,16 +915,16 @@ void MoveDown(GATE * &gate, vector<POINT> obstacle)
 	}
 	snake[SIZE_SNAKE - 1].y++;
 }
-void MoveUp(GATE * &gate, vector<POINT> obstacle)
+void MoveUp(GATE*& gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y, obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
 	{
-		Eat(gate,obstacle);
+		Eat(gate, obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -867,7 +934,7 @@ void MoveUp(GATE * &gate, vector<POINT> obstacle)
 	}
 	snake[SIZE_SNAKE - 1].y--;
 }
-void ResetData(GATE * &gate, vector<POINT>& obstacle) {
+void ResetData(GATE*& gate, vector<POINT>& obstacle) {
 	//Initialize the global values
 	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 75,
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
@@ -936,13 +1003,13 @@ void ResetDataLoadGame(vector<POINT>& obstacle)
 
 
 /////////////////////////////////////////////////////////////////////////				Header 5: Play Game								/////////////////////////////////////////
-void ThreadFunc(GATE * &gate, vector<POINT>& obstacle) {
+void ThreadFunc(GATE*& gate, vector<POINT>& obstacle) {
 	while (true) {
 		if (IsTouchBody())
 			ProcessDead();
 		if (gate->isGate == true)
 		{
-			if (IsGateTouch(snake, gate,obstacle) == 1)
+			if (IsGateTouch(snake, gate, obstacle) == 1)
 			{
 				ProcessDead();
 			}
@@ -953,16 +1020,16 @@ void ThreadFunc(GATE * &gate, vector<POINT>& obstacle) {
 			DrawSnakeAndFoodBefore(c, gate);
 			switch (MOVING) {
 			case 'A':
-				MoveLeft(gate,obstacle);
+				MoveLeft(gate, obstacle);
 				break;
 			case 'D':
-				MoveRight(gate,obstacle);
+				MoveRight(gate, obstacle);
 				break;
 			case 'W':
-				MoveUp(gate,obstacle);
+				MoveUp(gate, obstacle);
 				break;
 			case 'S':
-				MoveDown(gate,obstacle);
+				MoveDown(gate, obstacle);
 				break;
 			}
 			strcpy(c, "0");
@@ -971,9 +1038,9 @@ void ThreadFunc(GATE * &gate, vector<POINT>& obstacle) {
 		}
 	}
 }
-void StartGame(int x, GATE * &gate, vector<POINT>& obstacle) {
+void StartGame(int x, GATE*& gate, vector<POINT>& obstacle) {
 	system("cls"); // clear screen
-	if (x == 1) ResetData(gate,obstacle); // Intialize original data
+	if (x == 1) ResetData(gate, obstacle); // Intialize original data
 	else
 	{
 		ResetDataLoadGame(obstacle);
@@ -985,7 +1052,7 @@ void StartGame(int x, GATE * &gate, vector<POINT>& obstacle) {
 	STATE = 1;//Start running Thread    
 }
 
-void NewGame(int x, GATE * &gate, vector<POINT>& obstacle)
+void NewGame(int x, GATE*& gate, vector<POINT>& obstacle)
 {
 	StartGame(x, gate, obstacle);
 	std::thread t1(ThreadFunc, std::ref(gate), std::ref(obstacle)); //Create thread for snake
@@ -998,10 +1065,10 @@ void NewGame(int x, GATE * &gate, vector<POINT>& obstacle)
 			temp = _getch();
 			if (temp >= 'a' && temp <= 'z')
 				temp -= 32;
-			if (temp == 'Y') StartGame(1, gate,obstacle);
+			if (temp == 'Y') StartGame(1, gate, obstacle);
 			else
 			{
-				ExitGame(handle_t1); // int main thi return 0
+				ExitGame(handle_t1, gate); // int main thi return 0
 			}
 		}
 		else if (STATE) {
@@ -1015,7 +1082,7 @@ void NewGame(int x, GATE * &gate, vector<POINT>& obstacle)
 			{
 				PauseGame(handle_t1);
 				save_game();
-				ExitGame(handle_t1);
+				ExitGame(handle_t1,gate);
 			}
 			else if (temp == ' ' && !isPauseGame) {
 				PauseGame(handle_t1);
@@ -1026,7 +1093,7 @@ void NewGame(int x, GATE * &gate, vector<POINT>& obstacle)
 				isPauseGame = 1;
 			}
 			else if (temp == 27) {
-				ExitGame(handle_t1);
+				ExitGame(handle_t1,gate);
 				return; // int main**
 			}
 			else {
@@ -1090,7 +1157,7 @@ int LoadingAnimation() {
 	GotoXY(0, 0);
 	SetColor(12);
 	cout << R"(
-			_     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+		 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
 		/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
 		| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
 		| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
@@ -1119,8 +1186,9 @@ int LoadingAnimation() {
 	return 0;
 }
 
-void MainMenu(GATE * &gate, vector<POINT>& obstacle) //xay dung menu // ten cu~: main_menu
+void MainMenu(GATE*& gate, vector<POINT>& obstacle) //xay dung menu // ten cu~: main_menu
 {
+	system("cls");
 	int i = 1;
 	int Set[] = { 12,7,7,7,7 }; // DEFAULT COLORS
 	int counter = 1;
@@ -1138,7 +1206,7 @@ void MainMenu(GATE * &gate, vector<POINT>& obstacle) //xay dung menu // ten cu~:
 			SetColor(10);
 		}
 		cout << R"(
-			_     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+		 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
 		/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
 		| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
 		| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
@@ -1212,19 +1280,4 @@ void MainMenu(GATE * &gate, vector<POINT>& obstacle) //xay dung menu // ten cu~:
 			Set[counter - 1] = 12;
 		}
 	}
-}
-
-
-
-
-/////////////////////////////////////////////////////////////////////////				int main()				/////////////////////////////////////////
-int main()
-{
-
-	GATE* gate = new GATE();
-	ShowCur(0);
-	FixConsoleWindow();
-	MainMenu(gate,obstacle);
-	delete gate;
-	return 0;
 }
