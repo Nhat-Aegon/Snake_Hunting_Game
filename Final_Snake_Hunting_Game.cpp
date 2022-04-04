@@ -7,6 +7,7 @@
 #include<conio.h>
 #include<fstream>
 #include<string.h>
+#include <vector>
 
 using namespace std;
 
@@ -33,24 +34,28 @@ int LEVELS = 1;
 
 
 ///////////////////////////////////////////////////////////////////////////////Header 0: Useful Function	///////////////////////////////////////////////////////////////////////////////
-struct OPSTACLE
-{
-	int x;
-	int y;
-};
+
 struct GATE
 {
-	POINT g[6] = { 0 };
-	bool isGate = false;
-	int countGate = 0;
+POINT g[6] = { 0 };
+bool isGate = false;
+int countGate = 1;
 };
-OPSTACLE op[6];
+
+vector<POINT> obstacle;
+
 void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
-	COORD coord; // bien luu toa do trong cua so console, toa do (0,0) nam tren cung ben trai
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
+COORD coord; // bien luu toa do trong cua so console, toa do (0,0) nam tren cung ben trai
+coord.X = x;
+coord.Y = y;
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
 }
+
+
+
+
+
+
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
 											// duoc su dung de bieu dien 1 dieu gi do
@@ -90,7 +95,7 @@ void TextBackGround(WORD color)
 	SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 
-bool IsValid(int x, int y) {
+bool IsValid(int x, int y, vector<POINT> obstacle) {
 
 	for (int i = 0; i < SIZE_SNAKE; i++) {
 
@@ -100,10 +105,18 @@ bool IsValid(int x, int y) {
 
 		}
 	}
+	for (int i = 0; i < obstacle.size(); i++) {
+
+		if (obstacle[i].x == x && obstacle[i].y == y) {
+
+			return false;
+
+		}
+	}
 	return true;
 }
 // isGateTouch
-void GenerateFood() {
+void GenerateFood(vector<POINT>& obstacle) {
 	int x, y;
 	srand(time(NULL));
 	do {
@@ -113,7 +126,7 @@ void GenerateFood() {
 		if (x >= WIDTH_CONSOLE + 4) x = WIDTH_CONSOLE - 1;
 		if (y <= 4) y = 5;
 		if (y >= HEIGH_CONSOLE + 4) y = HEIGH_CONSOLE - 1;
-	} while (!IsValid(x, y));
+	} while (!IsValid(x, y,obstacle));
 	food[++FOOD_INDEX] = { x,y };
 }
 
@@ -145,7 +158,7 @@ void DrawBoard(int x, int y, int width, int height)
 }
 
 
-void DrawSnakeAndFoodBefore(char* str, GATE*& gate) {
+void DrawSnakeAndFoodBefore(char* str, GATE * &gate) {
 
 	if (gate->isGate == false)
 	{
@@ -158,7 +171,7 @@ void DrawSnakeAndFoodBefore(char* str, GATE*& gate) {
 		cout << ' ';
 	}
 }
-void DrawSnakeAndFoodAfter(GATE*& gate) {
+void DrawSnakeAndFoodAfter(GATE * &gate) {
 	if (gate->isGate == false)
 	{
 		GotoXY(food[FOOD_INDEX].x, food[FOOD_INDEX].y);
@@ -225,7 +238,7 @@ void DrawWGate(int x, int y)
 }
 bool pass = false;
 
-void DrawAndAssignGate(int x0, int y0, char drt,GATE*& gate)	// Ve cong va gan vi tri cac o lien quan vao op[]
+void DrawAndAssignGate(int x0, int y0, char drt, GATE * &gate)	// Ve cong va gan vi tri cac o lien quan vao op[]
 {
 	int n = 0;
 	gate->g[4].x = x0;
@@ -296,23 +309,163 @@ void DrawAndAssignGate(int x0, int y0, char drt,GATE*& gate)	// Ve cong va gan v
 	}
 }
 
-void ProcessGate(GATE*& gate)
+void ProcessGate(GATE * &gate, vector<POINT> obstacle)
 {
 	char direction[5] = { 'N','E','S','W' };
-	int x0 = 0, y0 = 0;
+	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 	srand(time(NULL));
 	char drt = direction[rand() % 4];			// Chon ra chieu ngau nhien
 	do
 	{
 		x0 = rand() % WIDTH_CONSOLE;
 		y0 = rand() % HEIGH_CONSOLE;
-	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0) == false); // Chon vi tri cong ngau nhien
-	DrawAndAssignGate(x0, y0, drt,gate); // Ve cong va gan cac gia tri vi tri lien quan
+		switch (drt)
+		{
+		case 'N':
+		{
+			x1 = x0;
+			y1 = y0 - 2;
+			break;
+		}
+		case 'E':
+		{
+			x1 = x0 + 2;
+			y1 = y0;
+			break;
+		}
+		case 'S':
+		{
+			x1 = x0;
+			y1 = y0 + 2;
+			break;
+		}
+		case 'W':
+		{
+			x1 = x0 - 2;
+			y1 = y0;
+			break;
+		}
+		}
+	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0, obstacle) == false|| IsValid(x1,y1,obstacle)==false); // Chon vi tri cong ngau nhien
+	DrawAndAssignGate(x0, y0, drt, gate); // Ve cong va gan cac gia tri vi tri lien quan
+}
+
+void CreateMap(vector<POINT>& obstacle, int countGate)
+{
+	for (int i = 0; i < obstacle.size(); i++)
+	{
+		GotoXY(obstacle[i].x, obstacle[i].y);
+		cout << " ";
+	}
+	obstacle.resize(0);
+	switch (countGate)
+	{
+	case 2:
+	{
+		for (int i = 0; i < 8; i++)
+		{
+			SetColor(69);
+			GotoXY(15, i + 5);
+			cout << char(177);
+			GotoXY(45, i + 5);
+			cout << char(177);
+			obstacle.push_back({ 15,i + 5 });
+			obstacle.push_back({ 45,i + 5 });
+			SetColor(7);
+		}
+		for (int i = 0; i < 8; i++)
+		{
+			SetColor(69);
+			GotoXY(30, i + 16);
+			cout << char(177);
+			GotoXY(60, i + 16);
+			cout << char(177);
+			obstacle.push_back({ 30,i + 16 });
+			obstacle.push_back({ 60,i + 16 });
+			SetColor(7);
+		}
+		break;
+	}
+	case 3:
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			SetColor(69);
+			GotoXY(15, i + 5);
+			cout << char(177);
+			GotoXY(70, i + 5);
+			cout << char(177);
+			obstacle.push_back({ 15,i + 5 });
+			obstacle.push_back({ 70,i + 5 });
+			SetColor(7);
+		}
+		for (int i = 0; i < 6; i++)
+		{
+			SetColor(69);
+			GotoXY(15, i + 18);
+			cout << char(177);
+			GotoXY(70, i + 18);
+			cout << char(177);
+			obstacle.push_back({ 15,i + 18 });
+			obstacle.push_back({ 70,i + 18 });
+			SetColor(7);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			SetColor(69);
+			GotoXY(25, i + 12);
+			cout << char(177);
+			GotoXY(33, i + 12);
+			cout << char(177);
+			GotoXY(41, i + 12);
+			cout << char(177);
+			GotoXY(54, i + 12);
+			cout << char(177);
+			obstacle.push_back({ 25, i + 12 });
+			obstacle.push_back({ 33, i + 12 });
+			obstacle.push_back({ 41, i + 12 });
+			obstacle.push_back({ 54, i + 12 });
+			SetColor(7);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			SetColor(69);
+			GotoXY(i + 26, 12);
+			cout << char(177);
+			GotoXY(i + 42, 12);
+			cout << char(177);
+			GotoXY(i + 52, 12);
+			cout << char(177);
+			obstacle.push_back({ i + 26, 12 });
+			obstacle.push_back({ i + 42, 12 });
+			obstacle.push_back({ i + 52, 12 });
+			SetColor(7);
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			SetColor(69);
+			GotoXY(i + 26, 16);
+			cout << char(177);
+			GotoXY(i + 34, 16);
+			cout << char(177);
+			GotoXY(i + 42, 16);
+			cout << char(177);
+			GotoXY(i + 52, 16);
+			cout << char(177);
+			obstacle.push_back({ i + 26, 16 });
+			obstacle.push_back({ i + 34, 16 });
+			obstacle.push_back({ i + 42, 16 });
+			obstacle.push_back({ i + 52, 16 });
+			SetColor(7);
+		}
+		break;
+	}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////				Header 4: Animations				/////////////////////////////////////////
 
-void TransitionNewMap(POINT snake[], GATE*& gate)
+void TransitionNewMap(POINT snake[], GATE * &gate, vector<POINT>& obstacle)
 {
 	SIZE_SNAKE--;
 	if (SIZE_SNAKE == 0)
@@ -324,7 +477,7 @@ void TransitionNewMap(POINT snake[], GATE*& gate)
 			cout << " ";
 		}
 		/////////// tao congratulation ////////////
-		GotoXY(20,13);
+		GotoXY(20, 13);
 		SetColor(12);
 		cout << " Congratulations, you have passed the " << gate->countGate << " round";
 		SetColor(7);
@@ -340,7 +493,7 @@ void TransitionNewMap(POINT snake[], GATE*& gate)
 		SIZE_SNAKE = 0;
 		MOVING = 'A';
 		CHAR_LOCK = 'D';
-		while (SIZE_SNAKE < 7)
+		while (SIZE_SNAKE < 6+(gate->countGate-1)*3)
 		{
 			for (int i = 0; i < SIZE_SNAKE; i++)
 			{
@@ -351,7 +504,7 @@ void TransitionNewMap(POINT snake[], GATE*& gate)
 			if (SIZE_SNAKE != 1)
 			{
 				snake[SIZE_SNAKE - 1].y = 14;
-				snake[SIZE_SNAKE - 1].x = snake[SIZE_SNAKE - 2].x;	
+				snake[SIZE_SNAKE - 1].x = snake[SIZE_SNAKE - 2].x;
 				for (int i = 0; i < SIZE_SNAKE - 1; i++)
 				{
 					snake[i].x = snake[i + 1].x;
@@ -359,23 +512,25 @@ void TransitionNewMap(POINT snake[], GATE*& gate)
 				}
 			}
 			Sleep(20);
-			for (int i = SIZE_SNAKE-1; i >= 0; i--)
+			for (int i = SIZE_SNAKE - 1; i >= 0; i--)
 			{
 				GotoXY(snake[i].x, snake[i].y);
 				cout << ID[SIZE_SNAKE - i - 1];
-			}				
+			}
 		}
 		gate->isGate = false;
 	}
+	if (gate->isGate == false)
+	CreateMap(obstacle, gate->countGate);
 }
 
-int IsGateTouch(POINT snake[], GATE*& gate)	// Kiem tra cham cong( 0: khong cham tuong, 1:cham tuong -> chet, 2:cham tuong -> qua man
+int IsGateTouch(POINT snake[], GATE * &gate, vector<POINT>& obstacle)	// Kiem tra cham cong( 0: khong cham tuong, 1:cham tuong -> chet, 2:cham tuong -> qua man
 {
 	int flag = 0;
 	if (snake[SIZE_SNAKE - 1].x == gate->g[5].x && snake[SIZE_SNAKE - 1].y == gate->g[5].y) // Ran di qua o truoc cong
 	{
-		TransitionNewMap(snake, gate);
-		if (SIZE_SNAKE == 7)
+		TransitionNewMap(snake, gate,obstacle);
+		if (SIZE_SNAKE == 6+(gate->countGate-1)*3)
 		{
 			for (int i = 78 - 1; i <= 78; i++)
 				for (int j = 14 - 1; j <= 14 + 1; j++)
@@ -387,14 +542,14 @@ int IsGateTouch(POINT snake[], GATE*& gate)	// Kiem tra cham cong( 0: khong cham
 		}
 		return 2;
 	}
-		for (int temp1 = 0; temp1 < 6; temp1++)
+	for (int temp1 = 0; temp1 < 6; temp1++)
+	{
+		if (snake[SIZE_SNAKE - 1].x == gate->g[temp1].x && snake[SIZE_SNAKE - 1].y == gate->g[temp1].y)
 		{
-			if (snake[SIZE_SNAKE -1].x == gate->g[temp1].x && snake[SIZE_SNAKE - 1].y == gate->g[temp1].y)
-			{
-				flag = 1;
-				break;
-			}
+			flag = 1;
+			break;
 		}
+	}
 	if (flag == 0)
 		return 0;
 
@@ -432,13 +587,13 @@ void DrawScoreAndLevels() // ve ra bang score ban dau
 
 void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
 {
-	SCORE+=100;
+	SCORE += 100;
 	SetColor(7);
 	GotoXY(92, 6);
 	cout << "LEVELS: " << LEVELS << endl;
 	GotoXY(92, 7);
 	cout << "SCORE: " << SCORE << endl;
-	if (SCORE == 500)
+	if (SCORE % 300)
 		LEVELS++;
 }
 
@@ -463,7 +618,7 @@ void GameGuide()
 	cout << endl;
 	for (int i = 0; i < 20; i++)
 	{
-		GotoXY(81, 5+i);
+		GotoXY(81, 5 + i);
 		cout << char(222);
 		GotoXY(121, 6 + i);
 		cout << char(222);
@@ -515,16 +670,20 @@ void ProcessDead()
 	SetColor(7);
 }
 
+void PauseGame(HANDLE t) 
+{
+	SuspendThread(t);
+}
+
 void ExitGame(HANDLE t) {
+	PauseGame(t);
 	system("cls");
 	int temp = TerminateThread(t, 0);
 	GotoXY(53, 6);
 	cout << "THANKS FOR PLAYING";
 	exit(0);
 }
-void PauseGame(HANDLE t) {
-	SuspendThread(t);
-}
+
 void save_game()
 {
 	// khai bao
@@ -586,7 +745,7 @@ void save_game()
 }
 
 /////////////////////////////////////////////////////////////////////////			  Header 3: Snake Components/////////////////////////////////////////
-void Eat(GATE*& gate) {
+void Eat(GATE * &gate, vector<POINT> obstacle) {
 
 	ScoreAndLevels();
 	snake[SIZE_SNAKE] = food[FOOD_INDEX];
@@ -594,18 +753,18 @@ void Eat(GATE*& gate) {
 	printf(" ");
 	if (!gate->isGate)
 	{
-		if (SCORE % 2 == 0)
+		if (SCORE % 300 == 0)
 		{
 			gate->isGate = true;
 			gate->countGate++;
-			ProcessGate(gate);
+			ProcessGate(gate,obstacle);
 
 			if (SPEED == MAX_SPEED)
 				SPEED = 1;
 			else SPEED++;
 		}
 		else {
-			GenerateFood();
+			GenerateFood(obstacle);
 			SIZE_SNAKE++;
 		}
 	}
@@ -622,22 +781,27 @@ bool IsTouchBody()
 	}
 	return false;
 }
-bool IsTouchwall(int x_head_position, int y_head_position)
+bool IsTouchwall(int x_head_position, int y_head_position, vector<POINT>& obstacle)
 {
-	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= WIDTH_CONSOLE + 5 || y_head_position >= HEIGH_CONSOLE + 4)
+	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= WIDTH_CONSOLE + 4 || y_head_position >= HEIGH_CONSOLE + 4)
 		return true;
+	for (int i = 0; i < obstacle.size(); i++)
+	{
+		if (x_head_position == obstacle[i].x && y_head_position == obstacle[i].y)
+			return true;
+	}
 	return false;
 }
-void MoveRight(GATE*& gate)
+void MoveRight(GATE * &gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x + 1, snake[SIZE_SNAKE - 1].y, obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x + 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
-		Eat(gate);
+		Eat(gate,obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -646,16 +810,16 @@ void MoveRight(GATE*& gate)
 	}
 	snake[SIZE_SNAKE - 1].x++;
 }
-void MoveLeft(GATE*& gate)
+void MoveLeft(GATE * &gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x - 1 == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y == food[FOOD_INDEX].y)
 	{
-		Eat(gate);
+		Eat(gate,obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -665,16 +829,16 @@ void MoveLeft(GATE*& gate)
 	}
 	snake[SIZE_SNAKE - 1].x--;
 }
-void MoveDown(GATE*& gate)
+void MoveDown(GATE * &gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y + 1 == food[FOOD_INDEX].y)
 	{
-		Eat(gate);
+		Eat(gate,obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -684,16 +848,16 @@ void MoveDown(GATE*& gate)
 	}
 	snake[SIZE_SNAKE - 1].y++;
 }
-void MoveUp(GATE*& gate)
+void MoveUp(GATE * &gate, vector<POINT> obstacle)
 {
-	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y))
+	if (IsTouchwall(snake[SIZE_SNAKE - 1].x, snake[SIZE_SNAKE - 1].y,obstacle))
 	{
 		ProcessDead();
 		return;
 	}
 	if (snake[SIZE_SNAKE - 1].x == food[FOOD_INDEX].x && snake[SIZE_SNAKE - 1].y - 1 == food[FOOD_INDEX].y)
 	{
-		Eat(gate);
+		Eat(gate,obstacle);
 	}
 	for (int i = 0; i < SIZE_SNAKE - 1; i++)
 	{
@@ -703,7 +867,7 @@ void MoveUp(GATE*& gate)
 	}
 	snake[SIZE_SNAKE - 1].y--;
 }
-void ResetData(GATE*& gate) {
+void ResetData(GATE * &gate, vector<POINT>& obstacle) {
 	//Initialize the global values
 	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 75,
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
@@ -711,10 +875,11 @@ void ResetData(GATE*& gate) {
 	gate->isGate = false;
 	for (int i = 0; i < 6; i++)
 		gate->g[i] = { 0,0 };
-	gate->countGate = 0;
+	gate->countGate = 1;
+	obstacle.resize(0);
 	// Initialize default values for snake
 	snake[0] = { 10, 5 }; snake[1] = { 11, 5 }; // khoi tao giao tri cho ran
-	GenerateFood();
+	GenerateFood(obstacle);
 	for (int i = 0; i < 6; i++)
 	{
 		snake[6 - i - 1].x = 15 - i;
@@ -722,7 +887,7 @@ void ResetData(GATE*& gate) {
 	}
 }
 
-void ResetDataLoadGame()
+void ResetDataLoadGame(vector<POINT>& obstacle)
 {
 	//Initialize the global values
 
@@ -761,7 +926,7 @@ void ResetDataLoadGame()
 	HEIGH_CONSOLE = 20;
 
 	fscanf_s(fin, "%d", &temp);
-	GenerateFood();
+	GenerateFood(obstacle);
 	FOOD_INDEX = SIZE_SNAKE - 6;
 	if (temp == 0)
 	{
@@ -771,13 +936,13 @@ void ResetDataLoadGame()
 
 
 /////////////////////////////////////////////////////////////////////////				Header 5: Play Game								/////////////////////////////////////////
-void ThreadFunc(GATE*& gate) {
+void ThreadFunc(GATE * &gate, vector<POINT>& obstacle) {
 	while (true) {
 		if (IsTouchBody())
 			ProcessDead();
 		if (gate->isGate == true)
 		{
-			if (IsGateTouch(snake, gate) == 1)
+			if (IsGateTouch(snake, gate,obstacle) == 1)
 			{
 				ProcessDead();
 			}
@@ -785,19 +950,19 @@ void ThreadFunc(GATE*& gate) {
 		if (STATE == 1) {//If my snake is alive
 			char* c = new char[2];
 			strcpy(c, " ");
-			DrawSnakeAndFoodBefore(c,gate);
+			DrawSnakeAndFoodBefore(c, gate);
 			switch (MOVING) {
 			case 'A':
-				MoveLeft(gate);
+				MoveLeft(gate,obstacle);
 				break;
 			case 'D':
-				MoveRight(gate);
+				MoveRight(gate,obstacle);
 				break;
 			case 'W':
-				MoveUp(gate);
+				MoveUp(gate,obstacle);
 				break;
 			case 'S':
-				MoveDown(gate);
+				MoveDown(gate,obstacle);
 				break;
 			}
 			strcpy(c, "0");
@@ -806,12 +971,12 @@ void ThreadFunc(GATE*& gate) {
 		}
 	}
 }
-void StartGame(int x, GATE*& gate) {
+void StartGame(int x, GATE * &gate, vector<POINT>& obstacle) {
 	system("cls"); // clear screen
-	if (x == 1) ResetData(gate); // Intialize original data
+	if (x == 1) ResetData(gate,obstacle); // Intialize original data
 	else
 	{
-		ResetDataLoadGame();
+		ResetDataLoadGame(obstacle);
 	}
 	system("cls");
 	DrawBoard(4, 4, WIDTH_CONSOLE, HEIGH_CONSOLE); // Draw game
@@ -820,10 +985,10 @@ void StartGame(int x, GATE*& gate) {
 	STATE = 1;//Start running Thread    
 }
 
-void NewGame(int x, GATE*& gate)
+void NewGame(int x, GATE * &gate, vector<POINT>& obstacle)
 {
-	StartGame(x,gate);
-	std::thread t1(ThreadFunc, std::ref(gate)); //Create thread for snake
+	StartGame(x, gate, obstacle);
+	std::thread t1(ThreadFunc, std::ref(gate), std::ref(obstacle)); //Create thread for snake
 	HANDLE handle_t1 = t1.native_handle(); //Take handle of thread
 	int isPauseGame = 0;
 	while (true) {
@@ -833,7 +998,7 @@ void NewGame(int x, GATE*& gate)
 			temp = _getch();
 			if (temp >= 'a' && temp <= 'z')
 				temp -= 32;
-			if (temp == 'Y') StartGame(1,gate);
+			if (temp == 'Y') StartGame(1, gate,obstacle);
 			else
 			{
 				ExitGame(handle_t1); // int main thi return 0
@@ -865,6 +1030,7 @@ void NewGame(int x, GATE*& gate)
 				return; // int main**
 			}
 			else {
+				//ResumeThread(handle_t1); //neu de day thi khong the bam pause duoc
 				if (temp == ' ' && isPauseGame)
 				{
 					switch (CHAR_LOCK)
@@ -890,11 +1056,17 @@ void NewGame(int x, GATE*& gate)
 					}
 					}
 					GotoXY(4, HEIGH_CONSOLE + 6);
-					cout << "                                                                       ";
-					isPauseGame = 0;
+					cout << "                                                                   ";
+					isPauseGame = 2;
 				}
 				if ((temp != CHAR_LOCK) && (temp == 'D' || temp == 'A' || temp == 'W' || temp == 'S'))
 				{
+					if (isPauseGame)
+					{
+						GotoXY(4, HEIGH_CONSOLE + 6);
+						cout << "                                                                   ";
+						isPauseGame = 0;
+					}
 					ResumeThread(handle_t1); //de day thi bam pause duoc nhung so lan bam "P" phai tuong ung so lan bam chuyen dong ve sau thi moi chuyen dong tiep duoc
 					if (temp == 'D') CHAR_LOCK = 'A';
 					else if (temp == 'W') CHAR_LOCK = 'S';
@@ -918,12 +1090,12 @@ int LoadingAnimation() {
 	GotoXY(0, 0);
 	SetColor(12);
 	cout << R"(
-			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
-			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
-			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
-			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
-		)";
+			_     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+		/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+		| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
+		| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
+		\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+	)";
 	GotoXY(30, 17);
 	SetColor(14);
 	cout << "Please wait while the game is loading! ";
@@ -947,7 +1119,7 @@ int LoadingAnimation() {
 	return 0;
 }
 
-void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
+void MainMenu(GATE * &gate, vector<POINT>& obstacle) //xay dung menu // ten cu~: main_menu
 {
 	int i = 1;
 	int Set[] = { 12,7,7,7,7 }; // DEFAULT COLORS
@@ -966,13 +1138,13 @@ void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
 			SetColor(10);
 		}
 		cout << R"(
-			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
-			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
-			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
-			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+			_     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+		/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+		| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
+		| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
+		\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
                                                                            
-		)";
+	)";
 		GotoXY(54, 9);
 		SetColor(Set[0]);
 		cout << "NEW GAME";
@@ -1016,14 +1188,14 @@ void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
 			{
 				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
-				NewGame(1, gate);
+				NewGame(1, gate, obstacle);
 				return;
 			}
 			case 4:
 			{
 				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				//LoadingAnimation();
-				NewGame(2, gate);
+				NewGame(2, gate, obstacle);
 				return;
 			}
 			break;
@@ -1048,10 +1220,11 @@ void MainMenu(GATE*& gate) //xay dung menu // ten cu~: main_menu
 /////////////////////////////////////////////////////////////////////////				int main()				/////////////////////////////////////////
 int main()
 {
+
 	GATE* gate = new GATE();
 	ShowCur(0);
 	FixConsoleWindow();
-	MainMenu(gate);
+	MainMenu(gate,obstacle);
 	delete gate;
 	return 0;
 }
