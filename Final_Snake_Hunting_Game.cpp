@@ -41,10 +41,7 @@ struct GATE
 	bool isGate = false;
 	int countGate = 1;
 };
-
 vector<POINT> obstacle;
-
-
 void GotoXY(int x, int y);
 void FixConsoleWindow();
 void ShowCur(bool CursorVisibility);
@@ -52,7 +49,7 @@ void SetColor(int color);
 void TextBackGround(WORD color);
 bool IsValid(int x, int y, vector<POINT> obstacle);
 void GenerateFood(vector<POINT>& obstacle);
-void DrawBoard(int x, int y, int width, int height);
+void DrawBoard(int x, int y, int width, int height, vector<POINT> obstacle);
 void DrawSnakeAndFoodBefore(char* str, GATE*& gate);
 void DrawSnakeAndFoodAfter(GATE*& gate);
 void DrawNGate(int x, int y);
@@ -71,7 +68,7 @@ void ProcessDead();
 void PauseGame(HANDLE t);
 //void ExitGame(HANDLE t);
 void ExitGame(HANDLE t, GATE*& gate);
-void save_game();
+void SaveGame(GATE* gate, vector<POINT>obstacle);
 void Eat(GATE*& gate, vector<POINT> obstacle);
 bool IsTouchBody();
 bool IsTouchwall(int x_head_position, int y_head_position, vector<POINT>& obstacle);
@@ -80,7 +77,7 @@ void MoveLeft(GATE*& gate, vector<POINT> obstacle);
 void MoveDown(GATE*& gate, vector<POINT> obstacle);
 void MoveUp(GATE*& gate, vector<POINT> obstacle);
 void ResetData(GATE*& gate, vector<POINT>& obstacle);
-void ResetDataLoadGame(vector<POINT>& obstacle);
+void ResetDataLoadGame(GATE*& gate, vector<POINT>& obstacle);
 void ThreadFunc(GATE*& gate, vector<POINT>& obstacle);
 void StartGame(int x, GATE*& gate, vector<POINT>& obstacle);
 void NewGame(int x, GATE*& gate, vector<POINT>& obstacle);
@@ -105,6 +102,40 @@ void GotoXY(int x, int y) { // ham chuyen con tro chuot toi toa do (x,y)
 	coord.X = x;
 	coord.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord); // GetStdHandle:tra ve 1 handle tuong ung voi thiet bi tieu chuan ( cu the la window console), ham con lai la di chuyen con tro toi toa do tren cua so console
+}
+
+void noScrollbar() {
+	// get handle to the console window
+	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	// retrieve screen buffer info
+	CONSOLE_SCREEN_BUFFER_INFO scrBufferInfo;
+	GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
+
+	// current window size
+	short winWidth = scrBufferInfo.srWindow.Right - scrBufferInfo.srWindow.Left + 1;
+	short winHeight = scrBufferInfo.srWindow.Bottom - scrBufferInfo.srWindow.Top + 1;
+
+	// current screen buffer size
+	short scrBufferWidth = scrBufferInfo.dwSize.X;
+	short scrBufferHeight = scrBufferInfo.dwSize.Y;
+
+	// to remove the scrollbar, make sure the window height matches the screen buffer height
+	COORD newSize;
+	newSize.X = scrBufferWidth;
+	newSize.Y = winHeight;
+
+	// set the new screen buffer dimensions
+	int Status = SetConsoleScreenBufferSize(hOut, newSize);
+	//if (Status == 0)
+	//{
+	//    cout << "SetConsoleScreenBufferSize() failed! Reason : " << GetLastError() << endl;
+	//    exit(Status);
+	//}
+
+	// print the current screen buffer dimensions
+	GetConsoleScreenBufferInfo(hOut, &scrBufferInfo);
+	//cout << "Screen Buffer Size : " << scrBufferInfo.dwSize.X << " x " << scrBufferInfo.dwSize.Y << endl;
 }
 void FixConsoleWindow() { // ham vo hieu khoa viec user thay doi kich thuoc cua so console
 	HWND consoleWindow = GetConsoleWindow(); // HWND la 1 handle toi Window va la 1 kieu so dinh dang cua so Console, handle la 1 dinh dang chung ( thuong la con tro)
@@ -182,7 +213,7 @@ void GenerateFood(vector<POINT>& obstacle) {
 
 
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
-void DrawBoard(int x, int y, int width, int height)
+void DrawBoard(int x, int y, int width, int height,vector<POINT>obstacle)
 {
 	// draw up and low walls
 	SetColor(50);
@@ -203,8 +234,15 @@ void DrawBoard(int x, int y, int width, int height)
 		GotoXY(x + width, y + (height - i));
 		cout << char(177);
 	}
+	int n = obstacle.size();
+	SetColor(12);
+	if (n > 0) {
+		for (int i = 0; i < obstacle.size(); i++) {
+			GotoXY(obstacle[i].x, obstacle[i].y);
+			cout << char(177);
+		}
+	}
 	SetColor(7);
-	GotoXY(width + 1, height + 1);
 }
 
 
@@ -638,13 +676,13 @@ void DrawScoreAndLevels() // ve ra bang score ban dau
 void ScoreAndLevels() //ham su dung bat dau tinh diem va level khi ran an
 {
 	SCORE += 100;
+	if (SCORE % 300 == 0)
+		LEVELS++;
 	SetColor(7);
 	GotoXY(92, 6);
 	cout << "LEVELS: " << LEVELS << endl;
 	GotoXY(92, 7);
 	cout << "SCORE: " << SCORE << endl;
-	if (SCORE % 300)
-		LEVELS++;
 }
 
 void GameGuide()
@@ -751,35 +789,15 @@ void ExitGame(HANDLE t, GATE*& gate) {
 	}
 }
 
-void save_game()
+void SaveGame(GATE* gate, vector<POINT> obstacle)
 {
 	// khai bao
 	system("cls");
 	char* filePath = new char[100];
 	char* name = new char[50];
 
-	// kiem tra file name
-	count_savegame++;
-	if (count_savegame == 4)
-		count_savegame = 1;
-	switch (count_savegame)
-	{
-	case 1:
-	{
-		strcpy(filePath, "savegame1.txt");
-		break;
-	}
-	case 2:
-	{
-		strcpy(filePath, "savegame2.txt");
-		break;
-	}
-	case 3:
-	{
-		strcpy(filePath, "savegame3.txt");
-		break;
-	}
-	}
+	// kiem tra file name	
+	strcpy(filePath, "savegame1.txt");
 
 	// doc du lieu
 
@@ -798,11 +816,29 @@ void save_game()
 	}
 	f << endl;
 	f << SPEED << endl;
-	f << MOVING << ' ' << CHAR_LOCK << endl;
-	f << gate << endl; // =1 co nghia là xuat hien gate, =0 la khong co gate
-	if (gate == 0) // neu khong co gate thi luu toa do cua food index
+	f << LEVELS << endl;
+	f << SCORE << endl;
+	f << int(MOVING) << endl;
+	f << int(CHAR_LOCK) << endl;
+	f << FOOD_INDEX << endl;
+	for (int i = 0; i <= FOOD_INDEX; i++)
 	{
-		f << food[FOOD_INDEX].x << ' ' << food[FOOD_INDEX].y << endl;
+		f << food[i].x << ' ' << food[i].y << endl;
+	}
+
+	f << gate->isGate << endl;
+	f << gate->countGate << endl;
+	for (int i = 0; i < 6; i++)
+		f << gate->g[i].x << ' ' << gate->g[i].y << endl;
+
+	int x = 0, y = 0;
+	f << obstacle.size() << endl;
+	if (obstacle.size() > 0)
+	{
+		for (int i = 0; i < obstacle.size(); i++)
+		{
+			f << obstacle[i].x << ' ' << obstacle[i].y << endl;
+		}
 	}
 	f.close();
 	if (!f)
@@ -939,6 +975,7 @@ void ResetData(GATE*& gate, vector<POINT>& obstacle) {
 	CHAR_LOCK = 'A', MOVING = 'D', SPEED = 1; FOOD_INDEX = 0, WIDTH_CONSOLE = 75,
 		HEIGH_CONSOLE = 20, SIZE_SNAKE = 6;
 	SCORE = 0;
+	LEVELS = 1;
 	gate->isGate = false;
 	for (int i = 0; i < 6; i++)
 		gate->g[i] = { 0,0 };
@@ -954,7 +991,7 @@ void ResetData(GATE*& gate, vector<POINT>& obstacle) {
 	}
 }
 
-void ResetDataLoadGame(vector<POINT>& obstacle)
+void ResetDataLoadGame(GATE*& gate, vector<POINT>& obstacle)
 {
 	//Initialize the global values
 
@@ -978,28 +1015,53 @@ void ResetDataLoadGame(vector<POINT>& obstacle)
 	Sleep(500);
 
 	fscanf_s(fin, "%d", &SIZE_SNAKE);
+
 	for (int i = 0; i < SIZE_SNAKE; i++)
 	{
 		fscanf_s(fin, "%d %d", &snake[i].x, &snake[i].y);
 	}
+
 	fscanf_s(fin, "%d", &SPEED);
+
+	fscanf_s(fin, "%d", &LEVELS);
+
+	fscanf_s(fin, "%d", &SCORE);
 
 	int temp = 0, temp1 = 0;
 	fscanf_s(fin, "%d %d", &temp, &temp1);
 	MOVING = char(temp);
 	CHAR_LOCK = char(temp1);
+	fscanf_s(fin, "%d", &FOOD_INDEX);
+	for (int i = 0; i <= FOOD_INDEX; i++)
+	{
+		fscanf_s(fin, "%d %d", &food[i].x, &food[i].y);
+	}
+	fscanf_s(fin, "%d", &temp);
+	if (temp == 1)
+	{
+		gate->isGate = true;
+	}
+	else {
+		gate->isGate = false;
+
+	}
+	fscanf_s(fin, "%d", &gate->countGate);
+	for (int i = 0; i < 6; i++) {
+		fscanf_s(fin, "%d %d", &gate->g[i].x, &gate->g[i].y);
+	}
+	int n = 0;
+	fscanf_s(fin, "%d", &n);
+	for (int i = 0; i < n; i++)
+	{
+		fscanf_s(fin, "%d %d", &temp, &temp1);
+		obstacle.push_back({ temp,temp1 });
+	}
+	SetColor(7);
 
 	WIDTH_CONSOLE = 75;
 	HEIGH_CONSOLE = 20;
-
-	fscanf_s(fin, "%d", &temp);
-	GenerateFood(obstacle);
-	FOOD_INDEX = SIZE_SNAKE - 6;
-	if (temp == 0)
-	{
-		fscanf_s(fin, "%d %d", &food[FOOD_INDEX].x, &food[FOOD_INDEX].y);
-	}
 }
+
 
 
 /////////////////////////////////////////////////////////////////////////				Header 5: Play Game								/////////////////////////////////////////
@@ -1043,10 +1105,18 @@ void StartGame(int x, GATE*& gate, vector<POINT>& obstacle) {
 	if (x == 1) ResetData(gate, obstacle); // Intialize original data
 	else
 	{
-		ResetDataLoadGame(obstacle);
+		ResetDataLoadGame(gate, obstacle);
 	}
 	system("cls");
-	DrawBoard(4, 4, WIDTH_CONSOLE, HEIGH_CONSOLE); // Draw game
+	DrawBoard(4, 4, WIDTH_CONSOLE, HEIGH_CONSOLE, obstacle); // Draw game
+	if (gate->isGate)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			GotoXY(gate->g[i].x, gate->g[i].y);
+			cout << char(177);
+		}
+	}
 	GameGuide();
 	DrawScoreAndLevels();
 	STATE = 1;//Start running Thread    
@@ -1081,8 +1151,8 @@ void NewGame(int x, GATE*& gate, vector<POINT>& obstacle)
 			if (temp == 'P')
 			{
 				PauseGame(handle_t1);
-				save_game();
-				ExitGame(handle_t1,gate);
+				SaveGame(gate, obstacle);
+				ExitGame(handle_t1, gate);
 			}
 			else if (temp == ' ' && !isPauseGame) {
 				PauseGame(handle_t1);
@@ -1093,7 +1163,7 @@ void NewGame(int x, GATE*& gate, vector<POINT>& obstacle)
 				isPauseGame = 1;
 			}
 			else if (temp == 27) {
-				ExitGame(handle_t1,gate);
+				ExitGame(handle_t1, gate);
 				return; // int main**
 			}
 			else {
