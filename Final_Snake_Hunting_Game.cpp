@@ -213,7 +213,7 @@ void GenerateFood(vector<POINT>& obstacle) {
 
 
 //////////////////////////////////////////////////////////////////////////		 Header 1: Environment					///////////////////////////////////////////////////////////
-void DrawBoard(int x, int y, int width, int height,vector<POINT>obstacle)
+void DrawBoard(int x, int y, int width, int height, vector<POINT>obstacle)
 {
 	// draw up and low walls
 	SetColor(50);
@@ -400,7 +400,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 void ProcessGate(GATE*& gate, vector<POINT> obstacle)
 {
 	char direction[5] = { 'N','E','S','W' };
-	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+	int x0 = 0, y0 = 0, x1 = 0, y1 = 0,x2=0,y2=0;
 	srand(time(NULL));
 	char drt = direction[rand() % 4];			// Chon ra chieu ngau nhien
 	do
@@ -412,29 +412,37 @@ void ProcessGate(GATE*& gate, vector<POINT> obstacle)
 		case 'N':
 		{
 			x1 = x0;
-			y1 = y0 - 2;
+			x2 = x0;
+			y1 = y0 - 1;
+			y2 = y0 - 2;
 			break;
 		}
 		case 'E':
 		{
-			x1 = x0 + 2;
+			x1 = x0 + 1;
+			x2 = x0 + 2;
 			y1 = y0;
+			y2 = y0;
 			break;
 		}
 		case 'S':
 		{
 			x1 = x0;
-			y1 = y0 + 2;
+			x2 = x0;
+			y1 = y0 + 1;
+			y2 = y0 + 2;
 			break;
 		}
 		case 'W':
 		{
-			x1 = x0 - 2;
+			x1 = x0 - 1;
+			x2 = x0 - 2;
 			y1 = y0;
+			y2 = y0;
 			break;
 		}
 		}
-	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0, obstacle) == false || IsValid(x1, y1, obstacle) == false); // Chon vi tri cong ngau nhien
+	} while (x0<7 || x0>(WIDTH_CONSOLE - 7) || y0<7 || y0>(HEIGH_CONSOLE - 7) || IsValid(x0, y0, obstacle) == false || IsValid(x1, y1, obstacle) == false || IsValid(x2, x2, obstacle) == false); // Chon vi tri cong ngau nhien
 	DrawAndAssignGate(x0, y0, drt, gate); // Ve cong va gan cac gia tri vi tri lien quan
 }
 
