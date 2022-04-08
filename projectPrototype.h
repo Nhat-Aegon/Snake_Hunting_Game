@@ -36,6 +36,13 @@ struct GATE
 	bool isGate = false;
 	int countGate = 1;
 };
+
+struct HIGHSCORE
+{
+	char* name = new char[50];
+	int score = 0;
+};
+
 void GotoXY(int x, int y);
 void FixConsoleWindow();
 void ShowCur(bool CursorVisibility);
@@ -63,6 +70,8 @@ void PauseGame(HANDLE t);
 //void ExitGame(HANDLE t);
 void ExitGame(DATA *&dataGame,HANDLE t, GATE*& gate,vector<POINT>&obstacle);
 void SaveGame(DATA *dataGame,GATE* gate, vector<POINT>obstacle);
+void ConfigHighscore(int SCORE, char* name);
+void writeHighScore();
 void Eat(DATA *&dataGame,GATE*& gate, vector<POINT> obstacle);
 bool IsTouchBody(DATA *dataGame);
 bool IsTouchwall(DATA *dataGame,int x_head_position, int y_head_position, vector<POINT>& obstacle);
