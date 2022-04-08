@@ -81,6 +81,7 @@ void ResetDataLoadGame(GATE*& gate, vector<POINT>& obstacle);
 void ThreadFunc(GATE*& gate, vector<POINT>& obstacle);
 void StartGame(int x, GATE*& gate, vector<POINT>& obstacle);
 void NewGame(int x, GATE*& gate, vector<POINT>& obstacle);
+int Contact(vector<POINT>& obstacle);
 int LoadingAnimation();
 void MainMenu(GATE*& gate, vector<POINT>& obstacle);
 
@@ -1226,6 +1227,311 @@ void NewGame(int x, GATE*& gate, vector<POINT>& obstacle)
 
 ///////////////////////////////////////////////////////////////////////////////				Header 6: Menu							///////////////////////////////////////////////////////////////////////////////
 
+int Contact(vector<POINT>& obstacle) {
+	system("cls");
+	const int BorX = 20;
+	const int BorY = 2;
+	const int Wide = 50;
+	const int Height = 17;
+	const int X = BorX + 2 + 2 + 1 + 1;
+	const int Y = Height + BorY;
+
+	int i = 1;
+	UINT old_cp = GetConsoleOutputCP();
+	SetConsoleOutputCP(CP_UTF8);
+	for (int i = Y; i > -Y; i--)
+	{
+		GotoXY(0, 0);
+		cout << R"(
+	   Y
+	  (")
+	   \\
+	    \\
+	     ))
+	    //
+	   //
+	  ((
+	   \\
+	    \\
+	     \\
+	      ))
+	     //
+	    //
+	   //
+	  ((
+	   \\
+	    \\
+	     V
+)";
+
+		GotoXY(0, 0);
+		cout << R"(
+												     Y
+												    (")
+												    //
+												   //
+												  ((
+												   \\
+												    \\
+												     ))
+												    //
+												   // 
+												  //
+												 ((
+												  \\
+												   \\
+												    \\
+												     ))
+												    //
+												   //
+												   V
+)";
+
+
+
+		int j = 0;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X+10, i + (j));
+				cout << u8"        ĐỒ ÁN KỸ THUẬT LẬP TRÌNH                             ";
+
+		}; j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                             ";
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X+10, i + (j));
+			if (i + j <= Y)
+				cout << u8"             HUNTING SNAKE                                   ";
+
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                             ";
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                             ";
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"              Trường Đại học Khoa học Tự nhiên               ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                              ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                          21CLC01                             ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                              ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                              ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                   Giảng viên hướng dẫn                       ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y) cout << u8"                                             ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                     Trương Toàn Thịnh                  ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                          Nhóm 4                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y) cout << u8"                                            ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                        Thành viên:                     ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                       Bùi Minh Nhật                    ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                     Trần Hà Minh Nhật                  ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                      Trần Đình Trung                   ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                    Nguyễn Vũ Minh Khôi                 ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"			                  __        ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"			      _______    /*_>-<     ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"			  ___/ _____ \__/ /         ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"			 <____/     \____/          ";
+			;
+		}j++;
+		if (i + j > BorY && i + j < Y)
+		{
+			GotoXY(X, i + (j));
+			if (i + j <= Y)
+				cout << u8"                                                        ";
+			;
+		}j++;
+		Sleep(500);
+	}
+
+
+	
+	//SetConsoleOutputCP(old_cp);
+
+	return 0;
+}
+
 int LoadingAnimation() {
 	system("cls");
 	int i = 7;
@@ -1291,6 +1597,50 @@ void MainMenu(GATE*& gate, vector<POINT>& obstacle) //xay dung menu // ten cu~: 
 		\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
                                                                            
 	)";
+		
+		GotoXY(10, 13);
+		if (i) {
+			SetColor(13);
+		}
+		else {
+			SetColor(10);
+		}
+
+		UINT old_cp = GetConsoleOutputCP();
+		SetConsoleOutputCP(CP_UTF8);
+		GotoXY(10, 13);
+		cout << u8"          ██████████          ";
+		GotoXY(10, 14);
+		cout << u8"        ██░░░░░░░░░░██        ";
+		GotoXY(10, 15);
+		cout << u8"       ██░░░░░░░░░░░░██       ";
+		GotoXY(10, 16);
+		cout << u8"      ██░░██░░░░░░██░░██      ";
+		GotoXY(10, 17);
+		cout << u8"     ██░░██░░░░░░██░░▒▒██     ";
+		GotoXY(10, 18);
+		cout << u8"     ██░░░░░░░░░░░░░░▒▒██     ";
+		GotoXY(10, 19);
+		cout << u8"       ██▒▒▒▒▒▒▒▒▒▒▒▒██       ";
+		GotoXY(10, 20);
+		cout << u8"        ██████████████        ";
+		GotoXY(10, 21);
+		cout << u8"    ████░░░░██░░░░▒▒████      ";
+		GotoXY(10, 22);
+		cout << u8"  ██░░░░░░██░░░░░░▒▒██▒▒██    ";
+		GotoXY(10, 23);
+		cout << u8"██░░░░██▒▒▒▒▒▒▒▒▒▒██░░▒▒▒▒██  ";
+		GotoXY(10, 24);
+		cout << u8"██▒▒░░░░██████████░░░░▒▒██▒▒██";
+		GotoXY(10, 25);
+		cout << u8"██▒▒░░░░░░░░░░░░░░░░░░▒▒██▒▒██";
+		GotoXY(10, 26);
+		cout << u8"  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒████▒▒██";
+		GotoXY(10, 27);
+		cout << u8"    ██████████████████    ██  ";
+
+		SetConsoleOutputCP(old_cp);
+		
 		GotoXY(54, 9);
 		SetColor(Set[0]);
 		cout << "NEW GAME";
@@ -1336,6 +1686,13 @@ void MainMenu(GATE*& gate, vector<POINT>& obstacle) //xay dung menu // ten cu~: 
 				//LoadingAnimation();
 				NewGame(1, gate, obstacle);
 				return;
+			}
+			case 3:
+			{
+				
+				Contact(obstacle);
+				MainMenu(gate, obstacle);
+				//break;
 			}
 			case 4:
 			{
