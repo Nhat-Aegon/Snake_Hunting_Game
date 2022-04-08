@@ -689,11 +689,79 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 			f << obstacle[i].x << ' ' << obstacle[i].y << endl;
 		}
 	}
+	ConfigHighscore(SCORE, name);
 	f.close();
 	if (!f)
 		cout << "Can't save your file, please try another options!";
 	delete[]filePath;
 	delete[]name;
+}
+
+void ConfigHighscore(int SCORE, char* name)
+{
+
+	HIGHSCORE* highscore = new HIGHSCORE[3];
+	FILE* fin = fopen("savehighscore.txt", "r+");
+	for (int i = 0; i < 3; i++)
+	{
+		fgets((highscore + i)->name, 50, fin);
+		fscanf_s(fin, "%d\n", &(highscore+i)->score);
+	}
+	fclose(fin);
+
+	for (int i = 0; i <3; i++)
+		if (SCORE > (highscore + i)->score)
+		{
+			
+			if (i == 0)
+			{
+				(highscore + 2)->name = (highscore + 1)->name;
+				(highscore + 2)->score = (highscore + 1)->score;
+				(highscore + 1)->name = (highscore)->name;
+				(highscore + 1)->score = (highscore)->score;
+			}
+			if (i == 1)
+			{
+				(highscore + 2)->name = (highscore + 1)->name;
+				(highscore + 2)->score = (highscore + 1)->score;
+			}
+			(highscore + i)->name = name;
+			(highscore + i)->score = SCORE;
+			break;
+		}
+	fin = fopen("savehighscore.txt", "w+");
+	for (int i = 0; i < 3; i++)
+	{
+		fputs((highscore+i)->name, fin);
+		if ((highscore + i)->name[strlen((highscore + i)->name) - 1] != '\n')
+			fprintf(fin, "\n");
+		fprintf(fin, "%d\n", (highscore + i)->score);
+	}
+	fclose(fin);
+	delete[]highscore;
+}
+
+void writeHighScore()
+{
+	system("cls");
+	int n;
+	HIGHSCORE* highscore = new HIGHSCORE[3];
+	FILE* fin = fopen("savehighscore.txt", "r+");
+	for (int i = 0; i < 3; i++)
+	{
+		fgets((highscore + i)->name, 50, fin);
+		fscanf_s(fin, "%d\n", &(highscore + i)->score);
+	}
+	fclose(fin);
+	GotoXY(32, 0);
+	SetColor(60);
+	cout << "* Leaderboard *";
+	for (int i = 0; i < 3; i++)
+	{
+		GotoXY(0, 8 * i +3);
+		cout << (highscore + i)->name << " - - " << (highscore + i)->score;
+	}
+	std::getchar();
 }
 
 /////////////////////////////////////////////////////////////////////////			  Header 3: Snake Components/////////////////////////////////////////
@@ -1177,6 +1245,11 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 				NewGame(dataGame,1, gate, obstacle);
 				return;
 			}
+			case 2:
+			{
+				writeHighScore();
+				return;
+			}		
 			case 4:
 			{
 				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
