@@ -13,7 +13,7 @@ using std::vector;
 #define MAX_SIZE_SNAKE 8
 #define MAX_SIZE_FOOD 10
 #define MAX_SPEED 3
-const int ID[32] = { 2,1,1,2,7,1,2,6,2,1,1,2,7,5,1,8,2,1,1,2,7,6,5,8,2,1,1,2,7,5,5,9 };
+const char ID[33] = {char(16),'2','1','1','2','7','1','2','6','2','1','1','2','7','5','1','8','2','1','1','2','7','6','5','8','2','1','1','2','7','5','5','9'};
 
 struct DATA {
 	POINT snake[32]; //snake
