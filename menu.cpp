@@ -413,23 +413,38 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 
 		GotoXY(54, 9);
 		SetColor(Set[0]);
-		cout << "NEW GAME";
+
+		if (Set[0] == 12)
+			cout << char(16) << "    NEW GAME    " << char(17);
+		else
+			cout << "     NEW GAME     ";
 
 		GotoXY(52, 10);
 		SetColor(Set[1]);
-		cout << "HIGHEST SCORE";
+		if (Set[1] == 12)
+			cout << char(16) << "    HIGHEST SCORE    " << char(17);
+		else
+			cout << "     HIGHEST SCORE     ";
 
 		GotoXY(55, 11);
 		SetColor(Set[2]);
-		cout << "CONTACT";
+		if (Set[2] == 12)
+			cout << char(16) << "    CONTACT    " << char(17);
+		else cout << "     CONTACT     ";
 
 		GotoXY(54, 12);
 		SetColor(Set[3]);
-		cout << "LAST GAME";
+		if (Set[3] == 12)
+			cout << char(16) << "    LAST GAME    " << char(17);
+		else
+			cout << "     LAST GAME     ";
 
 		GotoXY(56, 13);
 		SetColor(Set[4]);
-		cout << "QUIT";
+		if (Set[4] == 12)
+			cout << char(16) << "    QUIT    " << char(17);
+		else
+			cout << "     QUIT     ";
 
 		key = _getch();
 
