@@ -252,38 +252,23 @@ void ProcessGate(DATA* dataGame, GATE*& gate, vector<POINT> obstacle)
 	int x0 = 0, y0 = 0, x1 = 0, y1 = 0;
 	srand(time(NULL));
 	char drt = direction[rand() % 4];			// Chon ra chieu ngau nhien
-	do
+	while (x0<7 || x0>(dataGame->WIDTH_CONSOLE - 7) || y0<7 || y0>(dataGame->HEIGH_CONSOLE - 7) || IsValid(dataGame, i, j, obstacle) == false); // Chon vi tri cong ngau nhien
 	{
 		x0 = rand() % dataGame->WIDTH_CONSOLE;
 		y0 = rand() % dataGame->HEIGH_CONSOLE;
-		switch (drt)
+		for (i = x0 - 2; i <= x0 + 2; i++)
 		{
-		case 'N':
-		{
-			x1 = x0;
-			y1 = y0 - 2;
-			break;
+			for (j = y0 - 2; j <= y0 + 2; j++)
+			{
+				if (IsValid(datagame, i, j, obstacle) == false)
+					break;
+			}
+			if (IsValid(datagame, i, j, obstacle) == false)
+				break;
 		}
-		case 'E':
-		{
-			x1 = x0 + 2;
-			y1 = y0;
-			break;
-		}
-		case 'S':
-		{
-			x1 = x0;
-			y1 = y0 + 2;
-			break;
-		}
-		case 'W':
-		{
-			x1 = x0 - 2;
-			y1 = y0;
-			break;
-		}
-		}
-	} while (x0<7 || x0>(dataGame->WIDTH_CONSOLE - 7) || y0<7 || y0>(dataGame->HEIGH_CONSOLE - 7) || IsValid(dataGame,x0, y0, obstacle) == false || IsValid(dataGame,x1, y1, obstacle) == false); // Chon vi tri cong ngau nhien
+		if (IsValid(datagame, i, j, obstacle) == false)
+			continue;
+	};
 	DrawAndAssignGate(x0, y0, drt, gate); // Ve cong va gan cac gia tri vi tri lien quan
 }
 
