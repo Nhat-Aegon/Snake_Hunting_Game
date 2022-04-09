@@ -32,6 +32,19 @@ void MoveRight(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
 		ProcessDead(dataGame);
 		return;
 	}
+	if (IsTouchBody(dataGame))
+	{
+		ProcessDead(dataGame);
+		return;
+	}
+	if (gate->isGate == true)
+	{
+		if (IsGateTouch(dataGame, dataGame->snake, gate, obstacle) == 1)
+		{
+			ProcessDead(dataGame);
+			return;
+		}
+	}
 	if (dataGame->snake[dataGame->SIZE_SNAKE - 1].x + 1 == dataGame->food[dataGame->FOOD_INDEX].x && dataGame->snake[dataGame->SIZE_SNAKE - 1].y == dataGame->food[dataGame->FOOD_INDEX].y)
 	{
 		Eat(dataGame, gate, obstacle);
@@ -48,6 +61,19 @@ void MoveLeft(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle) {
 	{
 		ProcessDead(dataGame);
 		return;
+	}
+	if (IsTouchBody(dataGame))
+	{
+		ProcessDead(dataGame);
+		return;
+	}
+	if (gate->isGate == true)
+	{
+		if (IsGateTouch(dataGame, dataGame->snake, gate, obstacle) == 1)
+		{
+			ProcessDead(dataGame);
+			return;
+		}
 	}
 	if (dataGame->snake[dataGame->SIZE_SNAKE - 1].x - 1 == dataGame->food[dataGame->FOOD_INDEX].x && dataGame->snake[dataGame->SIZE_SNAKE - 1].y == dataGame->food[dataGame->FOOD_INDEX].y)
 	{
@@ -68,6 +94,19 @@ void MoveDown(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
 		ProcessDead(dataGame);
 		return;
 	}
+	if (IsTouchBody(dataGame))
+	{
+		ProcessDead(dataGame);
+		return;
+	}
+	if (gate->isGate == true)
+	{
+		if (IsGateTouch(dataGame, dataGame->snake, gate, obstacle) == 1)
+		{
+			ProcessDead(dataGame);
+			return;
+		}
+	}
 	if (dataGame->snake[dataGame->SIZE_SNAKE - 1].x == dataGame->food[dataGame->FOOD_INDEX].x && dataGame->snake[dataGame->SIZE_SNAKE - 1].y + 1 == dataGame->food[dataGame->FOOD_INDEX].y)
 	{
 		Eat(dataGame, gate, obstacle);
@@ -86,6 +125,19 @@ void MoveUp(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
 	{
 		ProcessDead(dataGame);
 		return;
+	}
+	if (IsTouchBody(dataGame))
+	{
+		ProcessDead(dataGame);
+		return;
+	}
+	if (gate->isGate == true)
+	{
+		if (IsGateTouch(dataGame, dataGame->snake, gate, obstacle) == 1)
+		{
+			ProcessDead(dataGame);
+			return;
+		}
 	}
 	if (dataGame->snake[dataGame->SIZE_SNAKE - 1].x == dataGame->food[dataGame->FOOD_INDEX].x && dataGame->snake[dataGame->SIZE_SNAKE - 1].y - 1 == dataGame->food[dataGame->FOOD_INDEX].y)
 	{
