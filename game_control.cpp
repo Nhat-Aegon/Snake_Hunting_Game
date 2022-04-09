@@ -56,23 +56,14 @@ void ResetData(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) {
 	// Initialize default values for snake
 	dataGame->snake[0] = { 10, 5 }; dataGame->snake[1] = { 11, 5 }; // khoi tao giao tri cho ran
 	GenerateFood(dataGame, obstacle);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < dataGame->SIZE_SNAKE; i++)
 	{
-		dataGame->snake[6 - i - 1].x = 15 - i;
-		dataGame->snake[6 - i - 1].y = 7;
+		dataGame->snake[dataGame->SIZE_SNAKE - i - 1].x = 15 - i;
+		dataGame->snake[dataGame->SIZE_SNAKE - i - 1].y = 7;
 	}
 }
 void ThreadFunc(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) {
 	while (true) {
-		if (IsTouchBody(dataGame))
-			ProcessDead(dataGame);
-		if (gate->isGate == true)
-		{
-			if (IsGateTouch(dataGame, dataGame->snake, gate, obstacle) == 1)
-			{
-				ProcessDead(dataGame);
-			}
-		}
 		if (dataGame->STATE == 1) {//If my snake is alive
 			char* c = new char[2];
 			strcpy(c, " ");
