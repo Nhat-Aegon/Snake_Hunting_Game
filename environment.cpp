@@ -120,7 +120,33 @@ void DrawSnakeAndFoodAfter(DATA*& dataGame, GATE*& gate){
 		GotoXY(dataGame->food[dataGame->FOOD_INDEX].x, dataGame->food[dataGame->FOOD_INDEX].y);
 		cout << ID[dataGame->SIZE_SNAKE];
 	}
-	for (int i = dataGame->SIZE_SNAKE - 1; i >= 0; i--) {
+	GotoXY(dataGame->snake[dataGame->SIZE_SNAKE-1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y);
+	SetColor(3);
+	switch (dataGame->MOVING)
+	{
+	case 'W':
+	{
+		cout << char(30);
+		break;
+	}
+	case 'S':
+	{
+		cout << char(31);
+		break;
+	}
+	case 'A':
+	{
+		cout << char(17);
+		break;
+	}
+	case 'D':
+	{
+		cout << char(16);
+		break;
+	}
+	}
+	SetColor(7);
+	for (int i = dataGame->SIZE_SNAKE - 2; i >= 0; i--) {
 		GotoXY(dataGame->snake[i].x, dataGame->snake[i].y);
 		cout << ID[dataGame->SIZE_SNAKE - i - 1];
 	}
