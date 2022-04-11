@@ -1,6 +1,40 @@
 ﻿#include"projectPrototype.h"
 using namespace std;
+int UpperSnakes() {
+	GotoXY(2, 0);
+	SetColor(14);
+	cout << "                          ____";
+	GotoXY(2, 1);
+	SetColor(14);
+	cout << " ________________________/ O  \\___/ ";
+	GotoXY(2, 2);
+	SetColor(14);
+	cout << "<%%%%%%%%%%%%%%%%%%%%%%%%_____/   \\";
 
+	GotoXY(40, 0);
+	SetColor(14);
+	cout << "                          ____";
+	GotoXY(40, 1);
+	SetColor(14);
+	cout << " ________________________/ O  \\___/ ";
+	GotoXY(40, 2);
+	SetColor(14);
+	cout << "<_O_O_O_O_O_O_O_O_O_O_O_O_____/   \\";
+
+
+	GotoXY(78, 0);
+	SetColor(14);
+	cout << "                          ____";
+	GotoXY(78, 1);
+	SetColor(14);
+	cout << " ________________________/ O  \\___/ ";
+	GotoXY(78, 2);
+	SetColor(14);
+	cout << "<_8_8_8_8_8_8_8_8_8_8_8_8_____/   \\";
+
+
+	return 0;
+}
 int LoadingAnimation() {
 	system("cls");
 	int i = 7;
