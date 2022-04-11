@@ -105,6 +105,7 @@ void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle) {
 			cout << char(177);
 		}
 	}
+	UpperSnakes();
 	GameGuide();
 	DrawScoreAndLevels(dataGame);
 	dataGame->STATE = 1;//Start running Thread    
