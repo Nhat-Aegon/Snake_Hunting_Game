@@ -84,5 +84,6 @@ void ThreadFunc(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
 void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
+int UpperSnakes();
 int LoadingAnimation();
 void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
