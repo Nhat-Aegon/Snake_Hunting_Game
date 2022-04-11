@@ -152,14 +152,16 @@ void DrawSnakeAndFoodAfter(DATA*& dataGame, GATE*& gate){
 	}
 	GotoXY(dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y);
 }
-void TriAngle()
+void TriAngle(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 {
 	int i = 0;
-	while (true)
+	int count = 0;
+	while (count!=11)
 	{
+		count++;
 		system("cls");
 		SetColor(i);
-
+		GotoXY(0, 0);
 		cout << R"(
                 $$\     $$\  $$$$$$\  $$\   $$\       $$\      $$\  $$$$$$\  $$\   $$\ 
                 \$$\   $$  |$$  __$$\ $$ |  $$ |      $$ | $\  $$ |$$  __$$\ $$$\  $$ |
@@ -170,8 +172,10 @@ void TriAngle()
                     $$ |     $$$$$$  |\$$$$$$  |      $$  /   \$$ | $$$$$$  |$$ | \$$ |
                     \__|     \______/  \______/       \__/     \__| \______/ \__|  \__|
     )";
+		
 		i = (i + 1) % 9;
 		SetColor(i);
+		GotoXY(0, 11);
 		cout << R"(
 
          /$$$$$$$   /$$$$$$  /$$   /$$       /$$        /$$$$$$        /$$   /$$ /$$   /$$  /$$$$$$  /$$$$$$$$
@@ -184,6 +188,25 @@ void TriAngle()
         |_______/ |__/  |__/|__/  \__/      |________/|__/  |__/      |__/  \__/|__/  |__/|__/  |__/   |__/   
                                                                                                                                                                      
     )";
-		Sleep(1000);
+		if (count < 10) Sleep(1000);
+	}
+	SetColor(7);
+	GotoXY(38, 22);
+	cout << "THANKS FOR PLAYING" << endl;
+	GotoXY(33, 23);
+	cout << "Press M to go back to Main Menu or ESC to exit game";
+	int key = 0;
+	key = _getch();
+	if (key >= 'a' && key <= 'z')
+		key -= 32;
+	if (key == 'M') //StartGame(1, gate);
+	{
+		MainMenu(dataGame, gate, obstacle);
+		return;
+	}
+	else
+	{
+		//ExitGame(handle_t1, gate); // int main thi return 0
+		exit(0);
 	}
 }
