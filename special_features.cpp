@@ -214,13 +214,44 @@ void writeHighScore()
 		fscanf_s(fin, "%d\n", &(highscore + i)->score);
 	}
 	fclose(fin);
-	GotoXY(32, 0);
+	GotoXY(52, 1);
 	SetColor(60);
+
 	cout << "* Leaderboard *";
-	for (int i = 0; i < 3; i++)
-	{
-		GotoXY(0, 8 * i + 3);
-		cout << (highscore + i)->name << " - - " << (highscore + i)->score;
-	}
+	
+	SetColor(69);
+
+	for (int i = 50; i <= 70; i++)
+		for (int j = 10; j <= 29; j++)
+		{
+			GotoXY(i, j);
+			cout << char(177);
+		}
+	for (int i = 15; i <= 35; i++)
+		for (int j = 15; j <= 29; j++)
+		{
+			GotoXY(i, j);
+			cout << char(177);
+		}
+	for (int i = 85; i <= 105; i++)
+		for (int j = 20; j <= 29; j++)
+		{
+			GotoXY(i, j);
+			cout << char(177);
+		}
+	SetColor(7);
+
+	GotoXY(56, 8);
+	cout << highscore[0].name;
+	GotoXY(56, 9);
+	cout << highscore[0].score;
+	GotoXY(21, 13);
+	cout << highscore[1].name;
+	GotoXY(21, 14);
+	cout << highscore[1].score;
+	GotoXY(92, 18);
+	cout << highscore[2].name;
+	GotoXY(92, 19);
+	cout << highscore[2].score;
 	std::getchar();
 }
