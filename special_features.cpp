@@ -214,44 +214,81 @@ void writeHighScore()
 		fscanf_s(fin, "%d\n", &(highscore + i)->score);
 	}
 	fclose(fin);
-	GotoXY(52, 1);
-	SetColor(60);
-
-	cout << "* Leaderboard *";
-	
+	GotoXY(0,0);
+	cout << "LeaderBoard";
 	SetColor(69);
-
 	for (int i = 50; i <= 70; i++)
 		for (int j = 10; j <= 29; j++)
 		{
 			GotoXY(i, j);
 			cout << char(177);
 		}
-	for (int i = 15; i <= 35; i++)
+	GotoXY(50, 10);
+	SetColor(6);
+	cout << R"(
+ 
+							  _/  |  
+							 / $$ |  
+							 $$$$ |  
+							   $$ |  
+							   $$ |  
+							  _$$ |_ 
+							 / $$   |
+							 $$$$$$/ 
+	)";
+	SetColor(69);
+	for (int i = 12; i <= 32; i++)
 		for (int j = 15; j <= 29; j++)
 		{
 			GotoXY(i, j);
 			cout << char(177);
 		}
+	GotoXY(35, 18);
+	SetColor(6);
+	cout << R"(
+		   ______  
+		  /      \ 
+		 /$$$$$$  |
+		 $$____$$ |
+		  /    $$/ 
+		 /$$$$$$/  
+		 $$ |_____ 
+		$$        |
+		 $$$$$$$$/ 
+	)";
+	SetColor(69);
 	for (int i = 85; i <= 105; i++)
-		for (int j = 20; j <= 29; j++)
+		for (int j = 18; j <= 29; j++)
 		{
 			GotoXY(i, j);
 			cout << char(177);
 		}
+	SetColor(6);
+	GotoXY(83, 19);
+	cout << R"(
+											   ______  
+											  /      \ 
+											 /$$$$$$  |
+											 $$ ___$$ |
+											   /   $$< 
+											  _$$$$$  |
+											 /  \__$$ |
+											 $$    $$/ 
+											  $$$$$$/  
+	)";
 	SetColor(7);
 
 	GotoXY(56, 8);
 	cout << highscore[0].name;
-	GotoXY(56, 9);
+	GotoXY(57, 9);
 	cout << highscore[0].score;
 	GotoXY(21, 13);
 	cout << highscore[1].name;
-	GotoXY(21, 14);
+	GotoXY(22, 14);
 	cout << highscore[1].score;
-	GotoXY(92, 18);
+	GotoXY(92, 16);
 	cout << highscore[2].name;
-	GotoXY(92, 19);
+	GotoXY(93, 17);
 	cout << highscore[2].score;
 	std::getchar();
 }
