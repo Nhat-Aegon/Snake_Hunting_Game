@@ -36,13 +36,15 @@ struct GATE
 	bool isGate = false;
 	int countGate = 1;
 };
-
 struct HIGHSCORE
 {
 	char* name = new char[50];
 	int score = 0;
 };
 
+void GameGuide();
+int UpperSnakes();
+int Contact(vector<POINT>& obstacle);
 void GotoXY(int x, int y);
 void FixConsoleWindow();
 void ShowCur(bool CursorVisibility);
@@ -84,6 +86,6 @@ void ThreadFunc(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
 void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
-int UpperSnakes();
 int LoadingAnimation();
 void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
+void TriAngle(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
