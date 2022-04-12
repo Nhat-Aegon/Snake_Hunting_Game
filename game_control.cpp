@@ -21,10 +21,24 @@ void ExitGame(DATA*& dataGame, HANDLE t, GATE*& gate, vector<POINT>& obstacle) {
 	PauseGame(t);
 	system("cls");
 	int temp = TerminateThread(t, 0);
-	GotoXY(34, 4);
-	cout << "THANKS FOR PLAYING";
-	GotoXY(34, 7);
+	GotoXY(0, 0);
+	SetColor(11);
+	cout << R"(
+
+  _______ _    _          _   _ _  __ _____   ______ ____  _____    _____  _           __     _______ _   _  _____ 
+ |__   __| |  | |   /\   | \ | | |/ // ____| |  ____/ __ \|  __ \  |  __ \| |        /\\ \   / /_   _| \ | |/ ____|
+    | |  | |__| |  /  \  |  \| | ' /| (___   | |__ | |  | | |__) | | |__) | |       /  \\ \_/ /  | | |  \| | |  __ 
+    | |  |  __  | / /\ \ | . ` |  <  \___ \  |  __|| |  | |  _  /  |  ___/| |      / /\ \\   /   | | | . ` | | |_ |
+    | |  | |  | |/ ____ \| |\  | . \ ____) | | |   | |__| | | \ \  | |    | |____ / ____ \| |   _| |_| |\  | |__| |
+    |_|  |_|  |_/_/    \_\_| \_|_|\_\_____/  |_|    \____/|_|  \_\ |_|    |______/_/    \_\_|  |_____|_| \_|\_____|
+                                                                                                                   
+)";
+	GotoXY(34, 15);
+	SetColor(10);
 	cout << "Press M to go back to Main Menu";
+	GotoXY(34, 20);
+	SetColor(10);
+	cout << "Press Esc to exit";
 	if (!dataGame->STATE)
 	{
 		key = _getch();
@@ -33,6 +47,10 @@ void ExitGame(DATA*& dataGame, HANDLE t, GATE*& gate, vector<POINT>& obstacle) {
 		if (key == 'M') //StartGame(1, gate);
 		{
 			MainMenu(dataGame, gate, obstacle);
+		}
+		if (key == 27)
+		{
+			exit(0);
 		}
 		else
 		{
