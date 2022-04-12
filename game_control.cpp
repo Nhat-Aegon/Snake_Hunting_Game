@@ -20,7 +20,6 @@ void ExitGame(DATA*& dataGame, HANDLE t, GATE*& gate, vector<POINT>& obstacle) {
 	int key = 0;
 	PauseGame(t);
 	system("cls");
-	int temp = TerminateThread(t, 0);
 	GotoXY(0, 0);
 	SetColor(11);
 	cout << R"(
@@ -36,27 +35,25 @@ void ExitGame(DATA*& dataGame, HANDLE t, GATE*& gate, vector<POINT>& obstacle) {
 	GotoXY(34, 15);
 	SetColor(10);
 	cout << "Press M to go back to Main Menu";
-	GotoXY(34, 20);
+	GotoXY(38, 17);
 	SetColor(10);
 	cout << "Press Esc to exit";
-	if (!dataGame->STATE)
+	key = _getch();
+	if (key >= 'a' && key <= 'z')
+		key -= 32;
+	if (key == 'M') //StartGame(1, gate);
 	{
-		key = _getch();
-		if (key >= 'a' && key <= 'z')
-			key -= 32;
-		if (key == 'M') //StartGame(1, gate);
-		{
-			MainMenu(dataGame, gate, obstacle);
-		}
-		if (key == 27)
-		{
-			exit(0);
-		}
-		else
-		{
-			//ExitGame(handle_t1, gate); // int main thi return 0
-			exit(0);
-		}
+		MainMenu(dataGame, gate, obstacle);
+	}
+	if (key == 27)
+	{
+		exit(0);
+	}
+	else
+	{
+		//ExitGame(handle_t1, gate); // int main thi return 0
+		int temp = TerminateThread(t, 0);
+		exit(0);
 	}
 }
 
