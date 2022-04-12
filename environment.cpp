@@ -5,7 +5,7 @@ void DrawScoreAndLevels(DATA* dataGame)// ve ra bang score ban dau
 {
 	SetColor(7);
 	GotoXY(92, 6);
-	cout << "LEVELS: " << dataGame->level << endl;
+	cout << "LEVELS: " << dataGame->LEVELS << endl;
 	GotoXY(92, 7);
 	cout << "SCORE: " << dataGame->SCORE << endl;
 }
