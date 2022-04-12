@@ -25,7 +25,7 @@ void Eat(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle) {
 	}
 	PlaySound(TEXT("Chomp.wav"), NULL, SND_FILENAME | SND_ASYNC);
 } //khi ran an moi thi do dai ran tang va vi tri moi duoc thay doi de tranh viec vi tri moi xuat hien tai vi tri con ran
-void MoveRight(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
+void MoveRight(DATA*& dataGame, GATE*& gate, vector<POINT> &obstacle)
 {
 	if (IsTouchwall(dataGame, dataGame->snake[dataGame->SIZE_SNAKE - 1].x + 1, dataGame->snake[dataGame->SIZE_SNAKE - 1].y, obstacle))
 	{
@@ -56,7 +56,7 @@ void MoveRight(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
 	}
 	dataGame->snake[dataGame->SIZE_SNAKE - 1].x++;
 }
-void MoveLeft(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle) {
+void MoveLeft(DATA*& dataGame, GATE*& gate, vector<POINT> &obstacle) {
 	if (IsTouchwall(dataGame, dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y, obstacle))
 	{
 		ProcessDead(dataGame);
@@ -87,7 +87,7 @@ void MoveLeft(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle) {
 	}
 	dataGame->snake[dataGame->SIZE_SNAKE - 1].x--;
 }
-void MoveDown(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
+void MoveDown(DATA*& dataGame, GATE*& gate, vector<POINT> &obstacle)
 {
 	if (IsTouchwall(dataGame, dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y, obstacle))
 	{
@@ -119,7 +119,7 @@ void MoveDown(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
 	}
 	dataGame->snake[dataGame->SIZE_SNAKE - 1].y++;
 }
-void MoveUp(DATA*& dataGame, GATE*& gate, vector<POINT> obstacle)
+void MoveUp(DATA*& dataGame, GATE*& gate, vector<POINT> &obstacle)
 {
 	if (IsTouchwall(dataGame, dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y, obstacle))
 	{
