@@ -4,11 +4,11 @@ using namespace std;
 void TransitionNewMap(DATA*& dataGame, POINT snake[], GATE*& gate, vector<POINT>& obstacle)
 {
 	dataGame->SIZE_SNAKE--;
-	if (dataGame->SIZE_SNAKE == 0)
+	if (dataGame->SIZE_SNAKE == 1)
 	{
 		if (gate->countGate == 4)
 		{
-			TriAngle();
+			WonGame(dataGame, gate, obstacle);
 			return;
 		}
 		/////////// xoa cong ////////////
@@ -176,3 +176,4 @@ void CreateMap(vector<POINT>& obstacle, int countGate)
 	}
 	}
 }
+
