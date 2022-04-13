@@ -88,4 +88,4 @@ void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
 int UpperSnakes();
 int LoadingAnimation();
 void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
-void TriAngle(DATA *&dataGame, GATE*&gate, vector<POINT>&obstacle);
+void WonGame(DATA *&dataGame, GATE*&gate, vector<POINT>&obstacle);
