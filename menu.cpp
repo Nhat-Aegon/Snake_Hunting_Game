@@ -1,4 +1,4 @@
-﻿#include"projectPrototype.h"
+#include"projectPrototype.h"
 using namespace std;
 int UpperSnakes() {
 	GotoXY(2, 0);
@@ -396,11 +396,11 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 			SetColor(10);
 		}
 		cout << R"(
-		 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
-		/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-		| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
-		| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
-		\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
+			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
+			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
+			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
                                                                            
 	)";
 		GotoXY(10, 13);
@@ -516,7 +516,7 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 			{
 
 				int temp = Contact(obstacle);
-				MainMenu(dataGame,gate, obstacle);
+				MainMenu(dataGame, gate, obstacle);
 				return;
 			}
 			case 4:
@@ -541,4 +541,3 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		}
 	}
 }
-
