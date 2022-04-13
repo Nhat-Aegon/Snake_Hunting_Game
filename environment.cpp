@@ -72,7 +72,7 @@ void GameGuide()
 	//	)";
 }
 
-void DrawBoard(DATA* dataGame, int x, int y, int width, int height, vector<POINT> obstacle){
+void DrawBoard(DATA* dataGame, int x, int y, int width, int height, vector<POINT> obstacle) {
 	// draw up and low walls
 	SetColor(50);
 	for (int i = 0; i <= width; i++)
@@ -102,7 +102,7 @@ void DrawBoard(DATA* dataGame, int x, int y, int width, int height, vector<POINT
 	}
 	SetColor(7);
 }
-void DrawSnakeAndFoodBefore(DATA*& dataGame, char* str, GATE*& gate){
+void DrawSnakeAndFoodBefore(DATA*& dataGame, char* str, GATE*& gate) {
 	if (gate->isGate == false)
 	{
 		GotoXY(dataGame->food[dataGame->FOOD_INDEX].x, dataGame->food[dataGame->FOOD_INDEX].y);
@@ -114,13 +114,13 @@ void DrawSnakeAndFoodBefore(DATA*& dataGame, char* str, GATE*& gate){
 		cout << ' ';
 	}
 }
-void DrawSnakeAndFoodAfter(DATA*& dataGame, GATE*& gate){
+void DrawSnakeAndFoodAfter(DATA*& dataGame, GATE*& gate) {
 	if (gate->isGate == false)
 	{
 		GotoXY(dataGame->food[dataGame->FOOD_INDEX].x, dataGame->food[dataGame->FOOD_INDEX].y);
 		cout << ID[dataGame->SIZE_SNAKE];
 	}
-	GotoXY(dataGame->snake[dataGame->SIZE_SNAKE-1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y);
+	GotoXY(dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y);
 	SetColor(3);
 	switch (dataGame->MOVING)
 	{
@@ -152,11 +152,12 @@ void DrawSnakeAndFoodAfter(DATA*& dataGame, GATE*& gate){
 	}
 	GotoXY(dataGame->snake[dataGame->SIZE_SNAKE - 1].x, dataGame->snake[dataGame->SIZE_SNAKE - 1].y);
 }
-void TriAngle(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
+void WonGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 {
+	SaveGame(dataGame, gate, obstacle);
 	int i = 0;
 	int count = 0;
-	while (count!=11)
+	while (count != 11)
 	{
 		count++;
 		system("cls");
@@ -172,7 +173,7 @@ void TriAngle(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
                     $$ |     $$$$$$  |\$$$$$$  |      $$  /   \$$ | $$$$$$  |$$ | \$$ |
                     \__|     \______/  \______/       \__/     \__| \______/ \__|  \__|
     )";
-		
+
 		i = (i + 1) % 9;
 		SetColor(i);
 		GotoXY(0, 11);
@@ -191,7 +192,7 @@ void TriAngle(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 		if (count < 10) Sleep(1000);
 	}
 	SetColor(7);
-	GotoXY(38, 22);
+	GotoXY(43 ,22);
 	cout << "THANKS FOR PLAYING" << endl;
 	GotoXY(33, 23);
 	cout << "Press M to go back to Main Menu or ESC to exit game";
