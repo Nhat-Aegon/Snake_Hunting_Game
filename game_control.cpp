@@ -99,7 +99,7 @@ void ThreadFunc(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) {
 			}
 			strcpy(c, "0");
 			DrawSnakeAndFoodAfter(dataGame, gate);
-			Sleep(100 / dataGame->SPEED);
+			Sleep(200 / dataGame->SPEED);
 		}
 	}
 }
@@ -153,7 +153,7 @@ void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle)
 				if (temp >= 'a' && temp <= 'z')
 					temp -= 32;
 			}
-			if (temp == 'P')
+			if (temp == 'L')
 			{
 				PauseGame(handle_t1);
 				SaveGame(dataGame, gate, obstacle);
@@ -220,4 +220,3 @@ void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle)
 		}
 	}
 }
-
