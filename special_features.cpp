@@ -214,8 +214,17 @@ void writeHighScore()
 		fscanf_s(fin, "%d\n", &(highscore + i)->score);
 	}
 	fclose(fin);
-	GotoXY(0,0);
-	cout << "LeaderBoard";
+	GotoXY(0, 0);
+	SetColor(11);
+	//cout << "LeaderBoard";
+	cout << R"(
+			.____                      .___          __________                       .___
+			|    |    ____ _____     __| _/__________\______   \ _________ _______  __| _/
+			|    |  _/ __ \\__  \   / __ |/ __ \_  __ \    |  _//  _ \__  \\_  __ \/ __ | 
+			|    |__\  ___/ / __ \_/ /_/ \  ___/|  | \/    |   (  <_> ) __ \|  | \/ /_/ | 
+			|_______ \___  >____  /\____ |\___  >__|  |______  /\____(____  /__|  \____ | 
+			        \/   \/     \/      \/    \/             \/           \/           \/ 
+)";
 	SetColor(69);
 	for (int i = 50; i <= 70; i++)
 		for (int j = 10; j <= 29; j++)
@@ -278,16 +287,16 @@ void writeHighScore()
 	)";
 	SetColor(7);
 
-	GotoXY(56, 8);
-	cout << highscore[0].name;
-	GotoXY(57, 9);
+	GotoXY(57, 8);
+	cout << highscore[0].name;//1
+	GotoXY(59, 9);
 	cout << highscore[0].score;
-	GotoXY(21, 13);
-	cout << highscore[1].name;
-	GotoXY(22, 14);
+	GotoXY(19, 13);
+	cout << highscore[1].name;//2
+	GotoXY(20, 14);
 	cout << highscore[1].score;
 	GotoXY(92, 16);
-	cout << highscore[2].name;
+	cout << highscore[2].name;//3
 	GotoXY(93, 17);
 	cout << highscore[2].score;
 	std::getchar();
