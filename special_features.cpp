@@ -71,25 +71,67 @@ void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 	dataGame->WIDTH_CONSOLE = 75;
 	dataGame->HEIGH_CONSOLE = 20;
 }
+
 void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 {
 	// khai bao
 	system("cls");
-	char* filePath = new char[100];
+	char** savenames = new char*[10];
+	for (int i = 0; i < 10; i++)
+	{
+		savenames[i] = new char[50];
+		strcpy(savenames[i], "NONE\n");
+	}
 	char* name = new char[50];
-
-	// kiem tra file name	
-	strcpy(filePath, "savegame1.txt");
+	char* temp = new char[50];
+	bool flag = false;
 
 	// doc du lieu
 
-	GotoXY(58, 7);
-	cout << "Enter your username:  ";
+	GotoXY(30, 9);
+	cout << "Enter your username (at least: 1 character and at most: 50 characters):  ";
+	GotoXY(40, 10);
+	cout << "<<";
+	GotoXY(91, 10);
+	cout << ">>";
+	GotoXY(42, 10);
+	ShowCur(1);
 	cin.getline(name, 50);
-
+	strcat(name, ".txt");
+	strcpy(temp, name);
+	strcat(temp, "\n");
+	ShowCur(0);
 	//save game vao file txt
-	fstream f;
-	f.open(filePath);
+	FILE* fin = fopen("SaveLists.txt", "r+");
+	for (int i = 0; i < 10; i++)
+	{
+		fgets(savenames[i], 50, fin);
+		cout << savenames[i];
+		if (strcmp(savenames[i],"NONE") == 0)
+			break;
+	}
+	fclose(fin);
+	//kiem tra ten file
+	for(int i=0;i<10;i++)
+		if (strcmp(name, savenames[i]) == 0)
+			flag = true;
+	if (flag == false)
+	{
+		for (int i = 9; i > 0; i--)
+		{
+			savenames[i] = NULL;
+			savenames[i] = savenames[i - 1];
+		}
+		savenames[0] = NULL;
+		savenames[0] = temp;
+	}
+	fin = fopen("SaveLists.txt", "w+");
+	for (int i = 0; i < 10; i++)
+		fputs(savenames[i], fin);
+	fclose(fin);
+	cout << name << " " << "asfafsa";
+	ofstream f;
+	f.open(name, fstream::app);
 	f << name << endl;
 	f << dataGame->SIZE_SNAKE << endl;
 	for (int i = 0; i < dataGame->SIZE_SNAKE; i++)
@@ -126,9 +168,11 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	f.close();
 	if (!f)
 		cout << "Can't save your file, please try another options!";
-	delete[]filePath;
+	std::getchar();
+	delete[]savenames;
 	delete[]name;
 }
+
 void ScoreAndLevels(DATA*& dataGame) //ham su dung bat dau tinh diem va level khi ran an
 {
 	dataGame->SCORE += 100;
