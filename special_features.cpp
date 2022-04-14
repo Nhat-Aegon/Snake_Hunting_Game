@@ -106,7 +106,6 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	for (int i = 0; i < 10; i++)
 	{
 		fgets(savenames[i], 50, fin);
-		cout << savenames[i];
 		if (strcmp(savenames[i],"NONE") == 0)
 			break;
 	}
@@ -129,7 +128,6 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	for (int i = 0; i < 10; i++)
 		fputs(savenames[i], fin);
 	fclose(fin);
-	cout << name << " " << "asfafsa";
 	ofstream f;
 	f.open(name, fstream::app);
 	f << name << endl;
@@ -168,7 +166,6 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	f.close();
 	if (!f)
 		cout << "Can't save your file, please try another options!";
-	std::getchar();
 	delete[]savenames;
 	delete[]name;
 }
