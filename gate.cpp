@@ -64,6 +64,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	{
 	case 'N':
 	{
+		gate->drt = 'N';
 		DrawNGate(x0, y0);
 		for (int a = x0 - 1; a <= x0 + 1; a++)
 			for (int b = y0 - 1; b <= y0; b++)
@@ -79,6 +80,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'E':
 	{
+		gate->drt = 'E';
 		DrawEGate(x0, y0);
 		for (int a = x0; a <= x0 + 1; a++)
 			for (int b = y0 - 1; b <= y0 + 1; b++)
@@ -94,6 +96,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'S':
 	{
+		gate->drt = 'S';
 		DrawSGate(x0, y0);
 		for (int a = x0 - 1; a <= x0 + 1; a++)
 			for (int b = y0; b <= y0 + 1; b++)
@@ -109,6 +112,7 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'W':
 	{
+		gate->drt = 'W';
 		DrawWGate(x0, y0);
 		for (int a = x0 - 1; a <= x0; a++)
 			for (int b = y0 - 1; b <= y0 + 1; b++)
@@ -152,7 +156,7 @@ void ProcessGate(DATA* dataGame, GATE*& gate, vector<POINT> obstacle)
 int IsGateTouch(DATA*& dataGame, POINT snake[], GATE*& gate, vector<POINT>& obstacle)// Kiem tra cham cong( 0: khong cham tuong, 1:cham tuong -> chet, 2:cham tuong -> qua man
 {
 	int flag = 0;
-	if (snake[dataGame->SIZE_SNAKE - 1].x == gate->g[5].x && snake[dataGame->SIZE_SNAKE - 1].y == gate->g[5].y) // Ran di qua o truoc cong
+	if (snake[dataGame->SIZE_SNAKE - 1].x == gate->g[4].x && snake[dataGame->SIZE_SNAKE - 1].y == gate->g[4].y && snake[dataGame->SIZE_SNAKE - 2].x == gate->g[5].x && snake[dataGame->SIZE_SNAKE - 2].y == gate->g[5].y) // Ran di qua o truoc cong
 	{
 		TransitionNewMap(dataGame, snake, gate, obstacle);
 		if (dataGame->SIZE_SNAKE == 6 + (gate->countGate - 1) * 3)
@@ -167,7 +171,7 @@ int IsGateTouch(DATA*& dataGame, POINT snake[], GATE*& gate, vector<POINT>& obst
 		}
 		return 2;
 	}
-	for (int temp1 = 0; temp1 < 6; temp1++)
+	for (int temp1 = 0; temp1 < 4; temp1++)
 	{
 		if (snake[dataGame->SIZE_SNAKE - 1].x == gate->g[temp1].x && snake[dataGame->SIZE_SNAKE - 1].y == gate->g[temp1].y)
 		{
@@ -177,7 +181,5 @@ int IsGateTouch(DATA*& dataGame, POINT snake[], GATE*& gate, vector<POINT>& obst
 	}
 	if (flag == 0)
 		return 0;
-
-
 	return 1;
 }
