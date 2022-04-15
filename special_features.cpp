@@ -18,7 +18,7 @@ char* getFile()
 	for (int i = 0; i < 50; i++)
 	{
 		GotoXY(i + 38, 10);
-		if(i%2 == 0)
+		if (i % 2 == 0)
 			cout << char(45);
 	}
 	for (int i = 0; i < 50; i++)
@@ -100,7 +100,7 @@ char* getFile()
 		}
 	}
 }
-void ResetDataLoadGame(char*fname,DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
+void ResetDataLoadGame(char* fname, DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 {
 	//Initialize the global values
 
@@ -161,6 +161,7 @@ void ResetDataLoadGame(char*fname,DATA*& dataGame, GATE*& gate, vector<POINT>& o
 	}
 	int n = 0;
 	fscanf_s(fin, "%d", &n);
+	obstacle.resize(0);
 	for (int i = 0; i < n; i++)
 	{
 		fscanf_s(fin, "%d %d", &temp, &temp1);
@@ -469,3 +470,5 @@ void writeHighScore()
 	cout << highscore[2].score;
 	std::getchar();
 }
+
+
