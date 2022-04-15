@@ -64,7 +64,6 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	{
 	case 'N':
 	{
-		gate->drt = 'N';
 		DrawNGate(x0, y0);
 		for (int a = x0 - 1; a <= x0 + 1; a++)
 			for (int b = y0 - 1; b <= y0; b++)
@@ -80,7 +79,6 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'E':
 	{
-		gate->drt = 'E';
 		DrawEGate(x0, y0);
 		for (int a = x0; a <= x0 + 1; a++)
 			for (int b = y0 - 1; b <= y0 + 1; b++)
@@ -96,7 +94,6 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'S':
 	{
-		gate->drt = 'S';
 		DrawSGate(x0, y0);
 		for (int a = x0 - 1; a <= x0 + 1; a++)
 			for (int b = y0; b <= y0 + 1; b++)
@@ -112,7 +109,6 @@ void DrawAndAssignGate(int x0, int y0, char drt, GATE*& gate)	// Ve cong va gan 
 	}
 	case 'W':
 	{
-		gate->drt = 'W';
 		DrawWGate(x0, y0);
 		for (int a = x0 - 1; a <= x0; a++)
 			for (int b = y0 - 1; b <= y0 + 1; b++)
