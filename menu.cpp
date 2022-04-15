@@ -1,5 +1,6 @@
 #include"projectPrototype.h"
 using namespace std;
+
 int UpperSnakes() {
 	GotoXY(2, 0);
 	SetColor(14);
@@ -46,8 +47,8 @@ int LoadingAnimation() {
 	cout << R"(
 			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
 			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
-			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
 			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
 	)";
 	GotoXY(30, 17);
@@ -385,6 +386,10 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 	char key;
 	//setColor(i);	
 
+	GotoXY(47, 16);
+	SetColor(14);
+	cout << "* Use W or S to choose options *";
+
 	while (true)
 	{
 		i = !i;
@@ -444,6 +449,8 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		cout << u8"    ██████████████████    ██  ";
 
 		SetConsoleOutputCP(old_cp);
+		
+
 
 		GotoXY(54, 9);
 		SetColor(Set[0]);
@@ -469,9 +476,9 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		GotoXY(54, 12);
 		SetColor(Set[3]);
 		if (Set[3] == 12)
-			cout << char(16) << "    LAST GAME    " << char(17);
+			cout << char(16) << "    LOAD GAME    " << char(17);
 		else
-			cout << "     LAST GAME     ";
+			cout << "     LOAD GAME     ";
 
 		GotoXY(56, 13);
 		SetColor(Set[4]);
@@ -480,6 +487,7 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		else
 			cout << "     QUIT     ";
 
+		
 		key = _getch();
 
 		if ((key == 'W' || key == 'w'))
@@ -516,12 +524,19 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 			{
 
 				int temp = Contact(obstacle);
-				MainMenu(dataGame, gate, obstacle);
+				MainMenu(dataGame,gate, obstacle);
 				return;
 			}
 			case 4:
 			{
 				NewGame(dataGame, 2, gate, obstacle);
+				return;
+			}
+			case 5:
+			{
+				system("cls");
+				exit(0);
+				
 				return;
 			}
 			return;
@@ -539,3 +554,4 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		}
 	}
 }
+
