@@ -3,10 +3,11 @@ using namespace std;
 
 void ProcessDead(DATA* dataGame)
 {
+	PlaySound(TEXT("die-long.wav"), NULL, SND_FILENAME | SND_ASYNC);
+	BlinkSnake(dataGame);
 	dataGame->STATE = 0;
 	GotoXY(3, dataGame->HEIGH_CONSOLE + 7);
 	SetColor(12);
-	PlaySound(TEXT("die-long.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	printf("DEAD!!! Type Y to play again or anykey to exit");
 	SetColor(7);
 }
@@ -110,7 +111,7 @@ void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle) {
 	{
 		char* fname = getFile();
 		system("cls");
-		ResetDataLoadGame(fname,dataGame, gate, obstacle);
+		ResetDataLoadGame(fname, dataGame, gate, obstacle);
 		PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		LoadingAnimation();
 	}
