@@ -83,7 +83,7 @@ void MoveUp(DATA*& dataGame, GATE*& gate, vector<POINT> &obstacle);
 void ResetData(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void ThreadFunc(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 char* getFile();
-void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
+void ResetDataLoadGame(char* fname,DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle);
 void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
 void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle);
 int UpperSnakes();
