@@ -108,7 +108,11 @@ void StartGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle) {
 	if (x == 1) ResetData(dataGame, gate, obstacle); // Intialize original data
 	else
 	{
-		ResetDataLoadGame(dataGame, gate, obstacle);
+		char* fname = getFile();
+		system("cls");
+		ResetDataLoadGame(fname,dataGame, gate, obstacle);
+		PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		LoadingAnimation();
 	}
 	system("cls");
 	DrawBoard(dataGame, 4, 4, dataGame->WIDTH_CONSOLE, dataGame->HEIGH_CONSOLE, obstacle); // Draw game
