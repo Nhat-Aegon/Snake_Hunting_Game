@@ -1,11 +1,110 @@
 #include"projectPrototype.h"
 using namespace std;
 
-void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
+char* getFile()
+{
+	cout << R"(
+                  _,.---._     ,---.                        _,---.   ,---.             ___      ,----.  
+        _.-.    ,-.' , -  `. .--.'  \      _,..---._    _.='.'-,  \.--.'  \     .-._ .'=.'\  ,-.--` , \ 
+      .-,.'|   /==/_,  ,  - \\==\-/\ \   /==/,   -  \  /==.'-     /\==\-/\ \   /==/ \|==|  ||==|-  _.-` 
+     |==|, |  |==|   .=.     /==/-|_\ |  |==|   _   _\/==/ -   .-' /==/-|_\ |  |==|,|  / - ||==|   `.-. 
+     |==|- |  |==|_ : ;=:  - \==\,   - \ |==|  .=.   ||==|_   /_,-.\==\,   - \ |==|  \/  , /==/_ ,    / 
+     |==|, |  |==| , '='     /==/ -   ,| |==|,|   | -||==|  , \_.' )==/ -   ,| |==|- ,   _ |==|    .-'  
+     |==|- `-._\==\ -    ,_ /==/-  /\ - \|==|  '='   /\==\-  ,    (==/-  /\ - \|==| _ /\   |==|_  ,`-._ 
+     /==/ - , ,/'.='. -   .'\==\ _.\=\.-'|==|-,   _`/  /==/ _  ,  |==\ _.\=\.-'/==/  / / , /==/ ,     / 
+     `--`-----'   `--`--''   `--`        `-.`.____.'   `--`------' `--`        `--`./  `--``--`-----`` 
+	)";
+	SetColor(2);
+	for (int i = 0; i < 50; i++)
+	{
+		GotoXY(i + 38, 10);
+		if(i%2 == 0)
+			cout << char(45);
+	}
+	for (int i = 0; i < 50; i++)
+	{
+		GotoXY(i + 38, 24);
+		if (i % 2 == 0)
+			cout << char(45);
+	}
+	ShowCur(0);
+	char** list = NULL;
+	list = new char* [10];
+	int Set[] = { 12,7,7,7,7,7,7,7,7,7 }; // DEFAULT COLORS
+	int counter = 1;
+	char key;
+	int flag = 0;
+	for (int i = 0; i < 10; i++)
+	{
+		list[i] = new char[50];
+	}
+	FILE* fin = fopen("SaveLists.txt", "r");
+	for (int i = 0; i < 10; i++)
+	{
+		if (i && strcmp(list[i - 1], "[NONE]") == 0)
+		{
+			strcpy(list[i], "[NONE]");
+		}
+		else
+		{
+			fgets(list[i], 50, fin);
+			if (strcmp(list[i], "end") == 0)
+			{
+				strcpy(list[i], "[NONE]");
+			}
+			if (list[i][strlen(list[i]) - 1] == '\n')
+			{
+				list[i][strlen(list[i]) - 1] = '\0';
+			}
+		}
+	}
+	fclose(fin);
+	//cout << 1 << endl;
+	while (true)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			SetColor(Set[i]);
+			GotoXY(54, 12 + i);
+			cout << list[i];
+		}
+		key = _getch();
+
+		if ((key == 'W' || key == 'w'))
+		{
+			counter--;
+			if (counter == 0)
+				counter = 10;
+		}
+		if ((key == 'S' || key == 's'))
+		{
+			counter++;
+			if (counter > 10)
+				counter = 1;
+
+		}
+		if (key == '\r')
+		{
+			if (strcmp(list[counter - 1], "[NONE]") != 0)
+				return *(list + (counter - 1));
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			Set[i] = 7;
+		}
+
+		if (counter != 0)
+		{
+			Set[counter - 1] = 12;
+		}
+	}
+}
+void ResetDataLoadGame(char*fname,DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 {
 	//Initialize the global values
 
-	FILE* fin = fopen("savegame1.txt", "r");
+	FILE* fin = fopen(fname, "r");
 	char* name = new char[50];
 
 	char c = '/0';
@@ -19,6 +118,7 @@ void ResetDataLoadGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 		len++;
 	}
 	name[len] = '\0';
+	name[len - 4] = '\0';
 	GotoXY(55, 10);
 
 	cout << "Welcome back " << name;
@@ -76,7 +176,7 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 {
 	// khai bao
 	system("cls");
-	char** savenames = new char*[10];
+	char** savenames = new char* [10];
 	for (int i = 0; i < 10; i++)
 	{
 		savenames[i] = new char[50];
@@ -84,8 +184,9 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	}
 	char* name = new char[50];
 	char* temp = new char[50];
-	bool flag = false;
-
+	bool flag;
+	char* spc = new char[30];
+	strcpy(spc, "*:<>?/\|~”#%&*:<>?/\{|}");
 	// doc du lieu
 
 	GotoXY(30, 9);
@@ -97,6 +198,32 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	GotoXY(42, 10);
 	ShowCur(1);
 	cin.getline(name, 50);
+	do
+	{
+		ShowCur(0);
+		flag = false;
+		for (int i = 0; i < strlen(name); i++)
+			for (int j = 0; j < strlen(spc); j++)
+				if (name[i] == spc[j])
+					flag = true;
+		if (flag == true)
+		{
+			system("cls");
+			GotoXY(30, 9);
+			cout << "Your username is invalid. Please rename again ";
+			Sleep(1000);
+			cout << "                                               ";
+			GotoXY(30, 9);
+			cout << "Enter your username (at least: 1 character and at most: 50 characters):  ";
+			GotoXY(40, 10);
+			cout << "<<";
+			GotoXY(91, 10);
+			cout << ">>";
+			GotoXY(42, 10);
+			ShowCur(1);
+			cin.getline(name, 50);
+		}
+	} while (flag == true);
 	strcat(name, ".txt");
 	strcpy(temp, name);
 	strcat(temp, "\n");
@@ -106,12 +233,12 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	for (int i = 0; i < 10; i++)
 	{
 		fgets(savenames[i], 50, fin);
-		if (strcmp(savenames[i],"NONE") == 0)
+		if (strcmp(savenames[i], "NONE") == 0)
 			break;
 	}
 	fclose(fin);
 	//kiem tra ten file
-	for(int i=0;i<10;i++)
+	for (int i = 0; i < 10; i++)
 		if (strcmp(name, savenames[i]) == 0)
 			flag = true;
 	if (flag == false)
@@ -128,6 +255,7 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	for (int i = 0; i < 10; i++)
 		fputs(savenames[i], fin);
 	fclose(fin);
+	//name[strlen(name) - 4] = '\0';
 	ofstream f;
 	f.open(name, fstream::app);
 	f << name << endl;
@@ -169,7 +297,6 @@ void SaveGame(DATA* dataGame, GATE* gate, vector<POINT>obstacle)
 	delete[]savenames;
 	delete[]name;
 }
-
 void ScoreAndLevels(DATA*& dataGame) //ham su dung bat dau tinh diem va level khi ran an
 {
 	dataGame->SCORE += 100;
