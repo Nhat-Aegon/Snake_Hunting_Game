@@ -108,7 +108,7 @@ bool IsTouchBody(DATA* dataGame)
 }
 bool IsTouchwall(DATA* dataGame, int x_head_position, int y_head_position, vector<POINT>& obstacle)
 {
-	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= dataGame->WIDTH_CONSOLE + 4 || y_head_position >= dataGame->HEIGH_CONSOLE + 4)
+	if (x_head_position <= 4 || y_head_position <= 4 || x_head_position >= dataGame->WIDTH_CONSOLE + 5 || y_head_position >= dataGame->HEIGH_CONSOLE + 4)
 		return true;
 	for (int i = 0; i < obstacle.size(); i++)
 	{
