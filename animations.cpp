@@ -176,4 +176,3 @@ void CreateMap(vector<POINT>& obstacle, int countGate)
 	}
 	}
 }
-
