@@ -521,8 +521,6 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 			}
 			case 4:
 			{
-				PlaySound(TEXT("start1.wav"), NULL, SND_FILENAME | SND_ASYNC);
-				LoadingAnimation();
 				NewGame(dataGame, 2, gate, obstacle);
 				return;
 			}
