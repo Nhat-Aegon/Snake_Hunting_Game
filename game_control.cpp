@@ -225,3 +225,6 @@ void NewGame(DATA*& dataGame, int x, GATE*& gate, vector<POINT>& obstacle)
 		}
 	}
 }
+
+
+
