@@ -1,6 +1,5 @@
 #include"projectPrototype.h"
 using namespace std;
-
 int UpperSnakes() {
 	GotoXY(2, 0);
 	SetColor(14);
@@ -47,8 +46,8 @@ int LoadingAnimation() {
 	cout << R"(
 			 _     _     _      _____  _  _      _____   ____  _      ____  _  __ _____
 			/ \ /|/ \ /\/ \  /|/__ __\/ \/ \  /|/  __/  / ___\/ \  /|/  _ \/ |/ //  __/
-			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \
-			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_
+			| |_||| | ||| |\ ||  / \  | || |\ ||| |  _  |    \| |\ ||| / \||   / |  \  
+			| | ||| \_/|| | \||  | |  | || | \||| |_//  \___ || | \||| |-|||   \ |  /_ 
 			\_/ \|\____/\_/  \|  \_/  \_/\_/  \|\____\  \____/\_/  \|\_/ \|\_|\_\\____\
 	)";
 	GotoXY(30, 17);
@@ -79,7 +78,7 @@ int Contact(vector<POINT>& obstacle) {
 	const int BorY = 2;
 	const int Wide = 50;
 	const int Height = 17;
-	const int X = BorX + 2 + 2 + 1 + 1;
+	const int X = BorX + 5;
 	const int Y = Height + BorY;
 
 	int i = 1;
@@ -146,20 +145,20 @@ int Contact(vector<POINT>& obstacle) {
 		{
 			GotoXY(X, i + (j));
 			if (i + j <= Y)
-				cout << u8"                                                             ";
+				cout << u8"                                                            ";
 		}j++;
 		if (i + j > BorY && i + j < Y)
 		{
 			GotoXY(X + 10, i + (j));
 			if (i + j <= Y)
-				cout << u8"             HUNTING SNAKE                                   ";
+				cout << u8"             HUNTING SNAKE                                  ";
 
 		}j++;
 		if (i + j > BorY && i + j < Y)
 		{
 			GotoXY(X, i + (j));
 			if (i + j <= Y)
-				cout << u8"                                                             ";
+				cout << u8"                                                            ";
 		}j++;
 		if (i + j > BorY && i + j < Y)
 		{
@@ -351,14 +350,14 @@ int Contact(vector<POINT>& obstacle) {
 		{
 			GotoXY(X, i + (j));
 			if (i + j <= Y)
-				cout << u8"			  ___/ _____ \__/ /         ";
+				cout << u8"			  ___/ _____ \\__/ /         ";
 			;
 		}j++;
 		if (i + j > BorY && i + j < Y)
 		{
 			GotoXY(X, i + (j));
 			if (i + j <= Y)
-				cout << u8"			 <____/     \____/          ";
+				cout << u8"			 <____/     \\____/          ";
 			;
 		}j++;
 		if (i + j > BorY && i + j < Y)
@@ -386,9 +385,13 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 	char key;
 	//setColor(i);	
 
-	GotoXY(47, 16);
-	SetColor(14);
-	cout << "* Use W or S to choose options *";
+	SetColor(6);
+	GotoXY(47, 17);
+	cout << "* Use W or S to select options *";
+
+	SetColor(6);
+	GotoXY(50, 18);
+	cout << "* Press enter to choose *";
 
 	while (true)
 	{
@@ -449,8 +452,6 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		cout << u8"    ██████████████████    ██  ";
 
 		SetConsoleOutputCP(old_cp);
-		
-
 
 		GotoXY(54, 9);
 		SetColor(Set[0]);
@@ -487,7 +488,6 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		else
 			cout << "     QUIT     ";
 
-		
 		key = _getch();
 
 		if ((key == 'W' || key == 'w'))
@@ -524,19 +524,12 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 			{
 
 				int temp = Contact(obstacle);
-				MainMenu(dataGame,gate, obstacle);
+				MainMenu(dataGame, gate, obstacle);
 				return;
 			}
 			case 4:
 			{
 				NewGame(dataGame, 2, gate, obstacle);
-				return;
-			}
-			case 5:
-			{
-				system("cls");
-				exit(0);
-				
 				return;
 			}
 			return;
@@ -554,4 +547,3 @@ void MainMenu(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle) //xay dung 
 		}
 	}
 }
-
