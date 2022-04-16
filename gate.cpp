@@ -136,7 +136,7 @@ void ProcessGate(DATA* dataGame, GATE*& gate, vector<POINT> obstacle)
 	{
 		x0 = rand() % dataGame->WIDTH_CONSOLE;
 		y0 = rand() % dataGame->HEIGH_CONSOLE;
-		for ( i = x0 - 2; i <= x0 + 2; i++)
+		for (i = x0 - 2; i <= x0 + 2; i++)
 		{
 			for (j = y0 - 2; j <= y0 + 2; j++)
 			{
@@ -154,6 +154,8 @@ int IsGateTouch(DATA*& dataGame, POINT snake[], GATE*& gate, vector<POINT>& obst
 	int flag = 0;
 	if (snake[dataGame->SIZE_SNAKE - 1].x == gate->g[4].x && snake[dataGame->SIZE_SNAKE - 1].y == gate->g[4].y && snake[dataGame->SIZE_SNAKE - 2].x == gate->g[5].x && snake[dataGame->SIZE_SNAKE - 2].y == gate->g[5].y) // Ran di qua o truoc cong
 	{
+		if(dataGame->SIZE_SNAKE==(6+(gate->countGate-1)*3)-1)
+		PlaySound(TEXT("gate.wav"), NULL, SND_FILENAME | SND_ASYNC);
 		TransitionNewMap(dataGame, snake, gate, obstacle);
 		if (dataGame->SIZE_SNAKE == 6 + (gate->countGate - 1) * 3)
 		{
