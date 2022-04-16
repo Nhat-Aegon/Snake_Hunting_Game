@@ -45,7 +45,7 @@ void GameGuide()
 	GotoXY(84, 13);
 	cout << " 'ESC'  : Exit game" << endl;
 	GotoXY(84, 14);
-	cout << " 'P'    : Save game " << endl;
+	cout << " 'L'    : Save game " << endl;
 	GotoXY(84, 15);
 	cout << "  Use 'W,A,S,D' key to move" << endl;
 	GotoXY(86, 18);
@@ -192,7 +192,7 @@ void WonGame(DATA*& dataGame, GATE*& gate, vector<POINT>& obstacle)
 		if (count < 10) Sleep(1000);
 	}
 	SetColor(7);
-	GotoXY(43 ,22);
+	GotoXY(43, 22);
 	cout << "THANKS FOR PLAYING" << endl;
 	GotoXY(33, 23);
 	cout << "Press M to go back to Main Menu or ESC to exit game";
