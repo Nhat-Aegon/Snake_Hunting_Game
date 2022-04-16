@@ -471,4 +471,3 @@ void writeHighScore()
 	std::getchar();
 }
 
-
